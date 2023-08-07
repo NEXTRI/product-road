@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+pnpm run lint-staged
+
+#!/bin/sh
+
+# Check for linting errors
+eslint . --ext .js,.ts
+
+# Check for prettier errors
+prettier --check .
