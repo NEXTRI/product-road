@@ -6,7 +6,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "vitest run",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "turbo run storybook",
     "storybook:build": "storybook build",
     "prepare": "husky install"
   },
@@ -33,13 +33,14 @@
     "prettier": "^2.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rimraf": "^5.0.5",
     "storybook": "^7.2.1",
     "turbo": "latest",
     "vitest": "^0.34.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "pnpm lint --fix",
+      "pnpm lint -- --fix",
       "pnpm format"
     ]
   },
