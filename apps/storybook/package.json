@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "prepare": "panda codegen",
     "build": "tsc && vite build",
     "storybook:dev": "storybook dev -p 6006 --disable-telemetry",
     "storybook:build": "storybook build --quiet",
