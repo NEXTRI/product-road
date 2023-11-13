@@ -35,5 +35,5 @@ yarn-error.log*
 # vercel
 .vercel
 
-#panda-css 
+# panda-css
 styled-system

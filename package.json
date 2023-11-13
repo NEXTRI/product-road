@@ -13,7 +13,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.7.0",
     "@commitlint/config-conventional": "^17.7.0",
-    "@pandacss/dev": "^0.18.2",
+    "@pandacss/dev": "^0.15.4",
     "@storybook/addon-docs": "^7.2.1",
     "@storybook/addon-essentials": "^7.2.1",
     "@storybook/addon-interactions": "^7.2.1",
