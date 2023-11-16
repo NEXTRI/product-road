@@ -1,9 +1,26 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { css } from "../../styled-system/css";
-import { flex } from "@/styled-system/patterns";
+import supabase from "@/lib/supabase/supabase-client";
 type Props = {};
 
 const LoginPage = (props: Props) => {
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const signIn = async () => {
+    setIsLoading(true);
+    const { data, error } = await supabase.auth.signInWithOtp({
+      email: email,
+      options: {
+        emailRedirectTo: "http://localhost:3000/welcome",
+      },
+    });
+    if (data) {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div
       className={css({
@@ -15,9 +32,6 @@ const LoginPage = (props: Props) => {
         p: "5",
       })}
     >
-      <head>
-        <title>Login | Frill.co</title>
-      </head>
       <div
         className={css({
           display: "flex",
@@ -84,8 +98,7 @@ const LoginPage = (props: Props) => {
           >
             Log in
           </h1>
-          <form
-            action=""
+          <div
             className={css({
               display: "flex",
               flexDirection: "column",
@@ -94,8 +107,9 @@ const LoginPage = (props: Props) => {
           >
             <input
               type="text"
-              name=""
-              id=""
+              name="email"
+              id="email"
+              onChange={(event) => setEmail(event.target.value)}
               className={css({
                 my: "3",
                 p: "3",
@@ -106,20 +120,6 @@ const LoginPage = (props: Props) => {
               })}
               placeholder="email"
             />
-            <input
-              type="text"
-              name=""
-              placeholder="password"
-              id=""
-              className={css({
-                outline: "none",
-                my: "3",
-                p: "3",
-                rounded: "md",
-                border: "1px solid",
-                borderColor: "gray.200",
-              })}
-            />
             <button
               className={css({
                 bg: "frenchRose",
@@ -127,15 +127,31 @@ const LoginPage = (props: Props) => {
                 my: "3",
                 p: "3",
                 rounded: "md",
+                cursor: isLoading ? "not-allowed" : "pointer",
+                display: "flex",
+                justifyContent: "center",
               })}
-              type="submit"
+              disabled={isLoading}
+              type="button"
+              onClick={() => signIn()}
             >
-              Submit
+              {isLoading ? (
+                <span
+                  className={css({
+                    w: "24px",
+                    h: "24px",
+                    border: "solid 3px",
+                    borderRadius: "full",
+                    borderColor: "white",
+                    borderLeftColor: "frenchRose",
+                    animation: "spin",
+                  })}
+                ></span>
+              ) : (
+                "Submit"
+              )}
             </button>
-          </form>
-          <a className={css({ color: "azureRadiance" })} href="">
-            Forgot your password?
-          </a>
+          </div>
         </div>
       </div>
     </div>

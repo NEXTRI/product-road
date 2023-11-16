@@ -20,6 +20,11 @@ export default defineConfig({
           nevada: { value: "#64676B" },
           azureRadiance: { value: "#1675f0" },
         },
+        animations: {
+          spin: {
+            value: "spin .5s infinite linear",
+          },
+        },
       },
     },
   },
