@@ -21,6 +21,14 @@ const LoginPage = (props: Props) => {
     }
   };
 
+  const signInWithGithub = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+    });
+
+    console.log("data", data, error);
+  };
+
   return (
     <div
       className={css({
@@ -150,6 +158,46 @@ const LoginPage = (props: Props) => {
               ) : (
                 "Submit"
               )}
+            </button>
+            <div
+              className={css({
+                display: "flex",
+                alignItems: "center",
+              })}
+            >
+              <span
+                className={css({
+                  h: "2px",
+                  flex: 1,
+                  bg: "gray.500",
+                  me: "3",
+                })}
+              ></span>
+              or
+              <span
+                className={css({
+                  h: "2px",
+                  flex: 1,
+                  bg: "gray.500",
+                  ms: "3",
+                })}
+              ></span>
+            </div>
+            <button
+              type="button"
+              className={css({
+                color: "white",
+                bg: "black",
+                my: "3",
+                p: "3",
+                rounded: "md",
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "center",
+              })}
+              onClick={signInWithGithub}
+            >
+              Sign In with GitHub
             </button>
           </div>
         </div>
