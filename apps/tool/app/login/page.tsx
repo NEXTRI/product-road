@@ -1,56 +1,36 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import { css } from "../../styled-system/css";
-import supabase from "@/lib/supabase/supabase-client";
+import { hstack, vstack } from "@/styled-system/patterns";
+import { getUserSession } from "@/lib/actions";
+import { redirect } from "next/navigation";
+import LoginForm from "./components/LoginForm";
+
 type Props = {};
 
-const LoginPage = (props: Props) => {
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const signIn = async () => {
-    setIsLoading(true);
-    const { data, error } = await supabase.auth.signInWithOtp({
-      email: email,
-      options: {
-        emailRedirectTo: "http://localhost:3000/welcome",
-      },
-    });
-    if (data) {
-      setIsLoading(false);
-    }
-  };
-
-  const signInWithGithub = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "github",
-    });
-
-    console.log("data", data, error);
-  };
+const LoginPage = async (props: Props) => {
+  const { data } = await getUserSession();
+  if (data.session) {
+    return redirect("/");
+  }
 
   return (
     <div
-      className={css({
+      className={vstack({
         bg: "athensGray",
         h: "screen",
-        display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         p: "5",
       })}
     >
       <div
-        className={css({
-          display: "flex",
-          justifyContent: "space-between",
+        className={hstack({
+          justify: "space-between",
           w: "full",
         })}
       >
         <div
-          className={css({
-            display: "flex",
-            justifyContent: "center",
+          className={hstack({
+            justify: "center",
             w: "16",
             h: "16",
           })}
@@ -80,128 +60,7 @@ const LoginPage = (props: Props) => {
           </a>
         </p>
       </div>
-      <div
-        className={css({
-          w: "full",
-          flexGrow: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        })}
-      >
-        <div
-          className={css({
-            display: "flex",
-            flexDirection: "column",
-            w: "full",
-            maxWidth: "400px",
-          })}
-        >
-          <h1
-            className={css({
-              fontSize: "3xl",
-              md: { fontSize: "4xl" },
-              fontWeight: "semibold",
-            })}
-          >
-            Log in
-          </h1>
-          <div
-            className={css({
-              display: "flex",
-              flexDirection: "column",
-              my: "5",
-            })}
-          >
-            <input
-              type="text"
-              name="email"
-              id="email"
-              onChange={(event) => setEmail(event.target.value)}
-              className={css({
-                my: "3",
-                p: "3",
-                rounded: "md",
-                outline: "none",
-                border: "1px solid",
-                borderColor: "gray.200",
-              })}
-              placeholder="email"
-            />
-            <button
-              className={css({
-                bg: "frenchRose",
-                color: "white",
-                my: "3",
-                p: "3",
-                rounded: "md",
-                cursor: isLoading ? "not-allowed" : "pointer",
-                display: "flex",
-                justifyContent: "center",
-              })}
-              disabled={isLoading}
-              type="button"
-              onClick={() => signIn()}
-            >
-              {isLoading ? (
-                <span
-                  className={css({
-                    w: "24px",
-                    h: "24px",
-                    border: "solid 3px",
-                    borderRadius: "full",
-                    borderColor: "white",
-                    borderLeftColor: "frenchRose",
-                    animation: "spin",
-                  })}
-                ></span>
-              ) : (
-                "Submit"
-              )}
-            </button>
-            <div
-              className={css({
-                display: "flex",
-                alignItems: "center",
-              })}
-            >
-              <span
-                className={css({
-                  h: "2px",
-                  flex: 1,
-                  bg: "gray.500",
-                  me: "3",
-                })}
-              ></span>
-              or
-              <span
-                className={css({
-                  h: "2px",
-                  flex: 1,
-                  bg: "gray.500",
-                  ms: "3",
-                })}
-              ></span>
-            </div>
-            <button
-              type="button"
-              className={css({
-                color: "white",
-                bg: "black",
-                my: "3",
-                p: "3",
-                rounded: "md",
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "center",
-              })}
-              onClick={signInWithGithub}
-            >
-              Sign In with GitHub
-            </button>
-          </div>
-        </div>
-      </div>
+      <LoginForm />
     </div>
   );
 };

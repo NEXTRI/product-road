@@ -1,11 +1,16 @@
 import { defineConfig } from "@pandacss/dev";
-
+import pandaPreset from "@pandacss/preset-panda";
 export default defineConfig({
+  presets: [pandaPreset],
   // Whether to use css reset
   preflight: true,
 
   // Where to look for your css declarations
-  include: ["./app/components/**/*.tsx", "./app/**/*.tsx"],
+  include: [
+    "./app/components/**/*.tsx",
+    "./components/*.tsx",
+    "./app/**/*.tsx",
+  ],
 
   // Files to exclude
   exclude: [],
