@@ -1,18 +1,19 @@
-import { css } from "@/styled-system/css";
 import { circle } from "@/styled-system/patterns";
 import React from "react";
 
-type Props = {};
+type Props = {
+  size?: string | number;
+};
 
-export const Spinner = (props: Props) => {
+export const Spinner = ({ size }: Props) => {
   return (
     <span
       className={circle({
         size: "24px",
-        // borderWidth: "2px",
         border: "2px solid",
-        borderColor: "rose.500",
-        borderLeftColor: "rose.100",
+        borderColor: "frenchRose",
+        borderLeftColor: "rose.500",
+        borderBottomColor: "rose.500",
         animation: "spin",
       })}
     ></span>

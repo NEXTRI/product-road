@@ -108,7 +108,7 @@ const LoginForm = (props: Props) => {
             type="button"
             onClick={() => signIn()}
           >
-            {isLoading ? <Spinner /> : "Submit"}
+            {isLoading ? <Spinner size="24px" /> : "Submit"}
           </button>
           <div
             className={hstack({
@@ -133,7 +133,7 @@ const LoginForm = (props: Props) => {
             })}
             onClick={signInWithGithub}
           >
-            Sign In with GitHub <Spinner />
+            Sign In with GitHub
           </button>
         </div>
       </div>
