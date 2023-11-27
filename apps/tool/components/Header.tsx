@@ -1,12 +1,9 @@
 import { css } from "@/styled-system/css";
 import React from "react";
+import { center, circle, hstack, square } from "@/styled-system/patterns";
+import { Home, Map, Megaphone, Wand2, Zap } from "lucide-react";
 import { SearchBar } from "./SearchBar";
-import { GrHomeRounded } from "react-icons/gr";
-import { VscWand } from "react-icons/vsc";
-import { IoMapOutline } from "react-icons/io5";
-import { CiBullhorn } from "react-icons/ci";
-import { MdBolt } from "react-icons/md";
-import { circle, hstack } from "@/styled-system/patterns";
+import ProgressBar from "./ProgressBar";
 
 type Props = {};
 
@@ -14,12 +11,15 @@ export const Header = (props: Props) => {
   return (
     <header
       className={hstack({
-        height: "16",
+        height: "14",
         w: "full",
         borderBottom: "solid",
         borderBottomWidth: "1px",
-        borderBottomColor: "black",
+        borderBottomColor: "gray.300",
         justify: "space-between",
+        fontWeight: "500",
+        fontSize: "sm",
+        px: "10",
       })}
     >
       <div
@@ -35,19 +35,30 @@ export const Header = (props: Props) => {
           })}
         >
           <div
-            className={css({
+            className={square({
+              size: "8",
+              bg: "pink.100",
               border: "1px solid",
-              borderColor: "pink",
-              padding: "3",
-              borderRadius: "2xl",
+              borderColor: "pink.200!important",
+              borderRadius: "sm",
+              color: "pink.600",
             })}
           >
             P
           </div>
           <h2>product-road</h2>
         </a>
-        <a href="">
-          <GrHomeRounded />
+        <a
+          href=""
+          className={css({
+            px: "2",
+            borderLeft: "solid 1px",
+            borderLeftColor: "gray.300",
+            borderRight: "solid 1px",
+            borderRightColor: "gray.300",
+          })}
+        >
+          <Home strokeWidth={2} size={18} />
         </a>
         <a
           href=""
@@ -57,8 +68,14 @@ export const Header = (props: Props) => {
             alignItems: "center",
           })}
         >
-          <VscWand />
-          <span>Ideas</span>
+          <Wand2 strokeWidth={2} size={18} />
+          <span
+            className={css({
+              ps: "1",
+            })}
+          >
+            Ideas
+          </span>
         </a>
         <a
           href=""
@@ -68,8 +85,14 @@ export const Header = (props: Props) => {
             alignItems: "center",
           })}
         >
-          <IoMapOutline />
-          <span>Roadmap</span>
+          <Map strokeWidth={2} size={18} />
+          <span
+            className={css({
+              ps: "1",
+            })}
+          >
+            Roadmap
+          </span>
         </a>
         <a
           href=""
@@ -79,27 +102,66 @@ export const Header = (props: Props) => {
             alignItems: "center",
           })}
         >
-          <CiBullhorn />
-          <span>Announcements</span>
+          <Megaphone strokeWidth={2} size={18} />
+          <span
+            className={css({
+              ps: "1",
+            })}
+          >
+            Announcements
+          </span>
         </a>
       </div>
       <div
         className={css({
           display: "flex",
           flex: 1,
-          justifyContent: "center",
+          justifyContent: "end",
           alignItems: "center",
         })}
       >
         <SearchBar />
-        <button>
-          <MdBolt />
-        </button>
-        <button>7</button>
         <button
           className={circle({
-            w: "50px",
-            h: "50px",
+            size: "6",
+            border: "solid 2px",
+            borderColor: "gray.300",
+            ms: "3",
+          })}
+        >
+          <Zap size={10} />
+        </button>
+
+        <button
+          className={circle({
+            size: "6",
+            position: "relative",
+            ms: "3",
+          })}
+        >
+          <span
+            className={center({
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              fontSize: "x-small",
+              color: "gray.500",
+            })}
+          >
+            7
+          </span>
+          <ProgressBar percent={7} width={"full"} />
+        </button>
+        <button
+          className={circle({
+            size: "6",
+            bg: "pink.100",
+            border: "1px solid",
+            borderColor: "pink.200!important",
+            color: "pink.600",
+            fontSize: "x-small",
+            ms: "3",
           })}
         >
           R

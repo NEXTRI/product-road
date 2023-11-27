@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { css } from "../../../styled-system/css";
 import { divider, hstack, vstack } from "@/styled-system/patterns";
 import { Spinner } from "@/components/Spinner";
-import { loginOTP, loginWithGithub } from "../actions";
+import { createClient } from "@/utils/supabase/client";
+
 type Props = {};
 
 const LoginForm = (props: Props) => {
@@ -13,7 +14,8 @@ const LoginForm = (props: Props) => {
 
   const signIn = async () => {
     setIsLoading(true);
-    const [data, error] = await loginOTP(email);
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.signInWithOtp({ email });
     if (data) {
       setIsLoading(false);
     }
@@ -24,7 +26,13 @@ const LoginForm = (props: Props) => {
   };
 
   const signInWithGithub = async () => {
-    const [data, error] = await loginWithGithub();
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: `${window.origin}/auth/callback`,
+      },
+    });
 
     if (error) {
       setIsLoading(false);

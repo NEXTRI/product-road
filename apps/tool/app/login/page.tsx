@@ -1,18 +1,20 @@
 import React from "react";
 import { css } from "../../styled-system/css";
 import { hstack, vstack } from "@/styled-system/patterns";
-import { getUserSession } from "@/lib/actions";
-import { redirect } from "next/navigation";
 import LoginForm from "./components/LoginForm";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
-type Props = {};
+export default async function Login() {
+  const cookieStore = cookies();
 
-const LoginPage = async (props: Props) => {
-  const { data } = await getUserSession();
+  const supabase = createClient(cookieStore);
+  const { data } = await supabase.auth.getSession();
+
   if (data.session) {
-    return redirect("/");
+    redirect("/dashboard");
   }
-
   return (
     <div
       className={vstack({
@@ -63,5 +65,4 @@ const LoginPage = async (props: Props) => {
       <LoginForm />
     </div>
   );
-};
-export default LoginPage;
+}
