@@ -4,6 +4,7 @@ import { center, circle, hstack, square } from "@/styled-system/patterns";
 import { Home, Map, Megaphone, Wand2, Zap } from "lucide-react";
 import { SearchBar } from "./SearchBar";
 import ProgressBar from "./ProgressBar";
+import DropDownMenu from "./DropDownMenu";
 
 type Props = {};
 
@@ -20,6 +21,7 @@ export const Header = (props: Props) => {
         fontWeight: "500",
         fontSize: "sm",
         px: "10",
+        position: "relative",
       })}
     >
       <div
@@ -153,19 +155,7 @@ export const Header = (props: Props) => {
           </span>
           <ProgressBar percent={7} width={"full"} />
         </button>
-        <button
-          className={circle({
-            size: "6",
-            bg: "pink.100",
-            border: "1px solid",
-            borderColor: "pink.200!important",
-            color: "pink.600",
-            fontSize: "x-small",
-            ms: "3",
-          })}
-        >
-          R
-        </button>
+        <DropDownMenu />
       </div>
     </header>
   );
