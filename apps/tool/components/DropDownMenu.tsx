@@ -1,6 +1,7 @@
 "use client";
 import { css } from "@/styled-system/css";
 import { circle, divider } from "@/styled-system/patterns";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 export default function DropDownMenu() {
@@ -47,11 +48,11 @@ export default function DropDownMenu() {
             w: "200px",
           })}
         >
-          <DropDownItem text="Settings" />
-          <DropDownItem text="Profile" />
-          <DropDownItem text="My content" />
-          <DropDownItem text="Help Docs" />
-          <DropDownItem text="Suggest a new feature" />
+          <DropDownItem link="" text="Settings" />
+          <DropDownItem link="" text="Profile" />
+          <DropDownItem link="" text="My content" />
+          <DropDownItem link="" text="Help Docs" />
+          <DropDownItem link="" text="Suggest a new feature" />
           <div
             className={divider({
               orientation: "horizontal",
@@ -59,7 +60,7 @@ export default function DropDownMenu() {
               my: "2",
             })}
           ></div>
-          <DropDownItem text="Create a company" />
+          <DropDownItem link="" text="Create a company" />
           <div
             className={divider({
               orientation: "horizontal",
@@ -67,7 +68,7 @@ export default function DropDownMenu() {
               my: "2",
             })}
           ></div>
-          <DropDownItem text="logout" />
+          <DropDownItem link="/auth/logout" text="logout" />
         </ul>
       )}
     </div>
@@ -76,13 +77,14 @@ export default function DropDownMenu() {
 
 type DropDownItemProps = {
   text: string;
+  link: string;
 };
 
-function DropDownItem({ text }: DropDownItemProps) {
+function DropDownItem({ text, link }: DropDownItemProps) {
   return (
     <li>
-      <a
-        href="/"
+      <Link
+        href={link}
         className={css({
           fontWeight: "300",
           color: "gray.600",
@@ -97,7 +99,7 @@ function DropDownItem({ text }: DropDownItemProps) {
         })}
       >
         {text}
-      </a>
+      </Link>
     </li>
   );
 }
