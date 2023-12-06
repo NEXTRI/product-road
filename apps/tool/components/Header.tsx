@@ -24,6 +24,8 @@ export const Header = (props: Props) => {
           px: "10",
           position: "fixed",
           top: 0,
+          bg: "white",
+          zIndex: "10",
         })}
       >
         <div

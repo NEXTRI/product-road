@@ -4,6 +4,7 @@ export type sideBarSection = {
 };
 
 export type sideBarItem = {
+  id: string;
   name: string;
   color?: string;
   number?: number;
