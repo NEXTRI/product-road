@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { css } from "../../../styled-system/css";
 import { divider, hstack, vstack } from "@/styled-system/patterns";
+import { Spinner } from "@/components/Spinner";
 
 type Props = {};
 
@@ -104,7 +105,7 @@ const LoginForm = (props: Props) => {
             type="button"
             onClick={() => signIn()}
           >
-            submit
+            {isLoading ? <Spinner /> : "Submit"}
           </button>
           <div
             className={hstack({
