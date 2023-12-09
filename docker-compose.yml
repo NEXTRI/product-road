@@ -4,7 +4,7 @@ services:
   api:
     container_name: product-road-api
     build:
-      context: ./backend
+      context: ./api
       dockerfile: Dockerfile
       args:
         DOCKER_BUILDKIT: 1
