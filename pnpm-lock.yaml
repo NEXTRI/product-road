@@ -86,6 +86,9 @@ importers:
       turbo:
         specifier: latest
         version: 1.11.1
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
       vitest:
         specifier: ^0.34.1
         version: 0.34.6
@@ -172,9 +175,6 @@ importers:
       eslint-config-next:
         specifier: 14.0.2
         version: 14.0.2(eslint@8.55.0)(typescript@5.3.3)
-      typescript:
-        specifier: ^5
-        version: 5.3.3
 
   packages/components/ui:
     devDependencies:

@@ -51,6 +51,7 @@
     "rimraf": "^5.0.5",
     "storybook": "^7.2.1",
     "turbo": "latest",
+    "typescript": "^5.3.3",
     "vitest": "^0.34.1"
   },
   "engines": {
