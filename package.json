@@ -1,5 +1,13 @@
 {
-  "name": "@nextri-org/product-road",
+  "name": "root",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "author": {
+    "name": "Oussama Djaidri",
+    "email": "odjaidri@gmail.com"
+  },
+  "license": "MIT",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -9,6 +17,12 @@
     "storybook": "turbo run storybook",
     "storybook:build": "storybook build",
     "prepare": "husky install || exit 0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "pnpm lint -- --fix",
+      "pnpm format"
+    ]
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.0",
@@ -39,11 +53,11 @@
     "turbo": "latest",
     "vitest": "^0.34.1"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "pnpm lint -- --fix",
-      "pnpm format"
-    ]
+  "engines": {
+    "node": ">=18.x"
   },
-  "packageManager": "pnpm@8.6.10"
+  "volta": {
+    "node": "18.18.0"
+  },
+  "packageManager": "pnpm@8.12.0"
 }
