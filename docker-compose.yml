@@ -4,7 +4,7 @@ services:
   api:
     container_name: product-road-api
     build:
-      context: ./backend
+      context: ./api
       dockerfile: Dockerfile
       args:
         DOCKER_BUILDKIT: 1
@@ -25,7 +25,7 @@ services:
       POSTGRES_DB: ${PGDATABASE}
       POSTGRES_PASSWORD: ${PGPASSWORD}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
   
