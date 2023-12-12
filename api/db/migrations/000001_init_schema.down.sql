@@ -10,3 +10,6 @@ DROP TABLE IF EXISTS feedbacks;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS external_users;
 DROP TABLE IF EXISTS users;
+
+DROP TYPE IF EXISTS feedback_category;
+DROP TYPE IF EXISTS feedback_status;
