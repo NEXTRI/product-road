@@ -8,9 +8,10 @@ File is available in the project root folder​
 
 ```
 # Database Settings
-PGUSER="postgres"
-PGPASSWORD="postgres123"
-PGHOST="db"
-PGDATABASE="app-db"
-DATABASE_URL=postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}
+PGUSER=postgres
+PGPASSWORD=postgres123
+PGHOST=localhost
+PGPORT=5433
+PGDATABASE=product-road
+DATABASE_URL=postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}
 ```
