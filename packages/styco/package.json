@@ -1,0 +1,41 @@
+{
+  "name": "@system/styco",
+  "version": "0.0.0",
+  "description": "Shared style context for slot recipes",
+  "main": "src/index.tsx",
+  "types": "src/index.tsx",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "prepare": "panda codegen",
+    "build": "tsup src/index.tsx --format=esm,cjs --dts --external=react",
+    "build-fast": "tsup src/index.tsx --format=esm,cjs --no-dts",
+    "dev": "pnpm build-fast --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "devDependencies": {
+    "@system/preset": "workspace:*",
+    "@testing-library/jest-dom": "^6.1.2",
+    "@testing-library/react": "^14.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "@vitest/ui": "^0.34.3",
+    "jsdom": "^22.1.0"
+  },
+  "peerDependencies": {
+    "react": "^16.8 || ^17.0 || ^18.0",
+    "react-dom": "^16.8 || ^17.0 || ^18.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    }
+  }
+}

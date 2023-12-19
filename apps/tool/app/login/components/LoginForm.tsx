@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { css } from "../../../styled-system/css";
-import { divider, hstack, vstack } from "@/styled-system/patterns";
+import { divider, hstack } from "@/styled-system/patterns";
 import { Spinner } from "@/components/Spinner";
 
 type Props = {};

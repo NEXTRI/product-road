@@ -2,13 +2,8 @@ import React from "react";
 import { css } from "../../styled-system/css";
 import { hstack, vstack } from "@/styled-system/patterns";
 import LoginForm from "./components/LoginForm";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function Login() {
-  // if (session) {
-  //   redirect("/dashboard");
-  // }
   return (
     <div
       className={vstack({
@@ -50,7 +45,7 @@ export default async function Login() {
           </div>
         </div>
         <p className={css({ color: "nevada", fontSize: "small" })}>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <a className={css({ color: "sky.400" })} rel="" href="/signup">
             Sign up
           </a>

@@ -5,14 +5,14 @@
   "type": "module",
   "scripts": {
     "prepare": "panda codegen",
-    "build": "tsc && vite build",
+    "debug": "panda debug",
     "storybook:dev": "storybook dev -p 6006 --disable-telemetry",
     "storybook:build": "storybook build --quiet",
-    "dev": "rimraf node_modules/.cache && pnpm storybook:dev"
+    "dev": "rimraf node_modules/.cache && pnpm storybook:dev",
+    "build": "pnpm storybook:build"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@system/preset": "workspace:*"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.4.5",
