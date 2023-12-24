@@ -16,7 +16,9 @@
     "test": "vitest run",
     "storybook": "turbo run storybook",
     "storybook:build": "storybook build",
-    "prepare": "husky install || exit 0"
+    "prepare": "husky install || exit 0",
+    "watch-preset": "chokidar 'packages/preset/src/**/*' -c 'pnpm run prepare-components'",
+    "prepare-components": "turbo run prepare --scope @ui/*"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -46,6 +48,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "chokidar-cli": "^3.0.0",
     "cypress": "^12.17.3",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",

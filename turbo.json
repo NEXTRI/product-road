@@ -17,6 +17,9 @@
     "lint": {
       "outputs": []
     },
+    "prepare": {
+      "cache": false
+    },
     "deploy": {
       "dependsOn": [
         "build",
@@ -26,6 +29,9 @@
       "outputs": []
     },
     "dev": {
+      "dependsOn": [
+        "prepare"
+      ],
       "cache": false
     }
   }
