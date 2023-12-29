@@ -6,32 +6,44 @@ export const button = defineRecipe({
   base: {
     display: "inline-flex",
     alignItems: "center",
-    px: "3",
-    py: "1",
-    textStyle: "xs",
+    px: "5",
+    py: "2",
+    textStyle: "sm",
     fontWeight: "semibold",
     transition: "colors",
     focusRingOffsetColor: "background",
+    outline: 0,
+    cursor: "pointer",
     gap: 1,
   },
   variants: {
     variant: {
-      default: {
-        borderColor: "blue",
-        bg: "green",
+      primary: {
+        borderColor: "transparent",
+        bg: "primary.purple",
         color: "primary.foreground",
+        boxShadow: "primary",
+        _hover: {
+          bga: "primary/80",
+        },
       },
-      // secondary: { 
-      //   borderColor: "transparent", 
-      //   bg: "blue", 
-      //   color: "secondary.foreground", 
-
-      //   _hover: { 
-      //     bga: "secondary/80", 
-      //   }, 
-      // }, 
+      secondary: {
+        borderColor: "secondary.gray",
+        bg: "transparent",
+        color: "secondary.gray",
+        boxShadow: "secondary",
+        _hover: {
+          bga: "secondary/80",
+        },
+      },
       outline: {
+        border: "base",
+        bg: "transparent",
         color: "foreground",
+
+        _hover: {
+          bga: "secondary/80",
+        },
       },
     },
     radius: {
@@ -43,7 +55,7 @@ export const button = defineRecipe({
     },
   },
   defaultVariants: {
-    variant: "default",
-    radius: "none",
+    variant: "primary",
+    radius: "lg",
   },
 });

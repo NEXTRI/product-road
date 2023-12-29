@@ -5,6 +5,7 @@ import { colors as semanticColors } from "./semantic-tokens/colors";
 import { borders as semanticBorders } from "./semantic-tokens/borders";
 import { radii as semanticRadii } from "./semantic-tokens/radii";
 import { animations as semanticAnimations } from "./semantic-tokens/animations";
+import { shadows as semanticShadows } from "./semantic-tokens/shadows";
 import { textStyles } from "./text-styles";
 import { layerStyles } from "./layer-styles";
 import { slotRecipes } from "./slot-recipes";
@@ -27,6 +28,7 @@ export const preset = definePreset({
         borders: semanticBorders,
         radii: semanticRadii,
         animations: semanticAnimations,
+        shadows: semanticShadows,
       },
       textStyles,
       layerStyles,

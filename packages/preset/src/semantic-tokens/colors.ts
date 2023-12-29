@@ -13,6 +13,11 @@ export const colors = defineSemanticTokens.colors({
       _dark: "hsl(0 0% 98%)",
     },
   },
+  gray: {
+    value: {
+      base: "#454545",
+    },
+  },
   muted: {
     DEFAULT: {
       value: {
@@ -80,6 +85,9 @@ export const colors = defineSemanticTokens.colors({
         _dark: "hsl(240 5.9% 10%)",
       },
     },
+    purple: {
+      value: "#563BFF",
+    },
   },
   secondary: {
     DEFAULT: {
@@ -93,6 +101,9 @@ export const colors = defineSemanticTokens.colors({
         base: "hsl(240 5.9% 10%)",
         _dark: "hsl(0 0% 98%)",
       },
+    },
+    gray: {
+      value: "#454545",
     },
   },
   accent: {
