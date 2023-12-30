@@ -1,6 +1,7 @@
 # Product Road
 
 ## Description
+
 Capture, organize, and announce product feedback in one place. This tool is aimed at developers, product managers, and startups.
 
 ### Project Scope Definition
@@ -18,6 +19,7 @@ Capture, organize, and announce product feedback in one place. This tool is aime
 - Improve communication between product teams and users.
 
 ### Selected Technologies
+
 - Frontend: core (Next,js with TypeScript) + styling (panda-css)
 - Backend: Golang
 - Database: Postgres
