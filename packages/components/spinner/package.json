@@ -1,0 +1,28 @@
+{
+  "name": "@ui/spinner",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "main": "src/index.tsx",
+  "types": "src/index.tsx",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "prepare": "panda codegen",
+    "debug": "panda debug",
+    "build": "tsup --dts",
+    "build-fast": "tsup --no-dts",
+    "dev": "pnpm build-fast --watch",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@system/preset": "workspace:*",
+    "@react-aria/button": "^3.8.1"
+  },
+  "devDependencies": {
+    "@storybook/react": "^7.2.3"
+  }
+}

@@ -195,7 +195,33 @@ importers:
         specifier: ^7.2.3
         version: 7.6.4(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
 
+  packages/components/button:
+    dependencies:
+      '@react-aria/button':
+        specifier: ^3.8.1
+        version: 3.9.0(react@18.2.0)
+      '@system/preset':
+        specifier: workspace:*
+        version: link:../../preset
+    devDependencies:
+      '@storybook/react':
+        specifier: ^7.2.3
+        version: 7.6.4(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
+
   packages/components/chip:
+    dependencies:
+      '@react-aria/button':
+        specifier: ^3.8.1
+        version: 3.9.0(react@18.2.0)
+      '@system/preset':
+        specifier: workspace:*
+        version: link:../../preset
+    devDependencies:
+      '@storybook/react':
+        specifier: ^7.2.3
+        version: 7.6.4(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
+
+  packages/components/spinner:
     dependencies:
       '@react-aria/button':
         specifier: ^3.8.1
