@@ -1,5 +1,0 @@
-packages:
-  - "packages/**/*"
-  - "packages/*"
-  - "apps/tool"
-  - "apps/storybook"
