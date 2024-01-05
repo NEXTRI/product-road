@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// TODO: maybe is better to move it => token.go ??
 // UserToken contains token details and an indicator for temporary user status.
 type UserToken struct {
   Email   string
