@@ -20,6 +20,6 @@ Capture, organize, and announce product feedback in one place. This tool is aime
 
 ### Selected Technologies
 
-- Frontend: core (Next,js with TypeScript) + styling (panda-css)
+- Frontend: core (Next,js with TypeScript) + styling (shadcn)
 - Backend: Golang
 - Database: Postgres
