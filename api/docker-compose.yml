@@ -4,7 +4,7 @@ services:
   api:
     container_name: product-road-api
     build:
-      context: ./api
+      context: .
       dockerfile: Dockerfile
       args:
         DOCKER_BUILDKIT: 1
@@ -26,6 +26,14 @@ services:
       - "${PGHOSTPORT}:${PGPORT}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  redis:
+    container_name: product-road-redis
+    image: redis:6.2.7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
   
 volumes:
   postgres_data:
+  redis_data:
