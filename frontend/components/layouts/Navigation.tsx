@@ -1,5 +1,8 @@
+"use client";
 import React from "react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Home,
   MessageSquareText,
@@ -17,23 +20,23 @@ interface MenuItem {
 }
 
 const menu: MenuItem[] = [
-  { id: 1, label: "Dashboard", url: "#", iconName: Home },
-  { id: 2, label: "FeedBacks", url: "#", iconName: MessageSquareText },
+  { id: 1, label: "Dashboard", url: "/", iconName: Home },
+  { id: 2, label: "FeedBacks", url: "/feedback", iconName: MessageSquareText },
   { id: 3, label: "Kanban", url: "#", iconName: KanbanSquare },
   { id: 4, label: "Billing", url: "#", iconName: Wallet },
 ];
 
 function fetchMenuItem({ id, label, url, iconName }: MenuItem) {
   const Icon = iconName || Annoyed;
-
-  let className = id === 1 ? "active" : "";
+  const currentRoute = usePathname();
+  let className = currentRoute === url ? "active" : "";
   return (
     <li key={id} className={cn("px-8 relative text-gray-500", className)}>
       <span></span>
-      <a className="flex gap-2" href={url}>
+      <Link href={url} className="flex gap-2">
         <Icon />
         {label}
-      </a>
+      </Link>
     </li>
   );
 }
