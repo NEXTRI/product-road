@@ -37,7 +37,8 @@ func main() {
   logger := &passwordless.BufferLogger{}
 
   userService := service.NewUserService(pgRepo)
-  emailService := service.NewEmailService(passwordless.NewMemoryStore(), passwordless.NewLogTransport(logger), passwordless.NewToken(tokenConfig), tokenConfig)
+  // emailService := service.NewEmailService(passwordless.NewMemoryStore(), passwordless.NewLogTransport(logger), passwordless.NewToken(tokenConfig), tokenConfig)
+	emailService := service.NewEmailService(passwordless.NewMemoryStore(), passwordless.NewLogTransport(logger), passwordless.NewToken(tokenConfig), tokenConfig)
   jwtService := service.NewJWTService()
 
   handler.InitServices(userService, emailService, jwtService)

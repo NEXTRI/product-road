@@ -1,12 +1,10 @@
-package transportsmtp
+package passwordless
 
 import (
 	"context"
 	"fmt"
 	"net/smtp"
 	"os"
-
-	"github.com/nextri/product-road/passwordless"
 )
 
 // SMTPConfig holds the configuration for SMTPTransport.
@@ -28,7 +26,7 @@ func NewSMTPTransport(config SMTPConfig) *SMTPTransport {
 }
 
 // SendToken sends a token using the log transport.
-func (s *SMTPTransport) SendToken(ctx context.Context, email, token string, tokenType passwordless.TokenType, isTemp bool) error {
+func (s *SMTPTransport) SendToken(ctx context.Context, email, token string, tokenType TokenType, isTemp bool) error {
 	baseURL := os.Getenv("APP_BASE_URL")
 	if baseURL == "" {
 		baseURL = "http://localhost:8080"
@@ -48,9 +46,9 @@ func (s *SMTPTransport) SendToken(ctx context.Context, email, token string, toke
 	}
 }
 
-func composeEmail(email, token string, tokenType passwordless.TokenType, isTemp bool, baseURL string) (subject, body string) {
+func composeEmail(email, token string, tokenType TokenType, isTemp bool, baseURL string) (subject, body string) {
 	switch tokenType {
-	case passwordless.TokenTypeString:
+	case TokenTypeString:
 		var userStatus string
 		if isTemp {
 			userStatus = "temporary"
@@ -60,7 +58,7 @@ func composeEmail(email, token string, tokenType passwordless.TokenType, isTemp 
 		magicLink := fmt.Sprintf("%s/authenticate?token=%s&email=%s&userStatus=%s", baseURL, token, email, userStatus)
 		subject = "Your Magic Link"
 		body = fmt.Sprintf("Hello,\n\nPlease use the following link to login: %s", magicLink)
-	case passwordless.TokenTypePin:
+	case TokenTypePin:
 		subject = "Your PIN"
 		body = fmt.Sprintf("Hello,\n\nYour PIN is: %s", token)
 	}

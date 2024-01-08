@@ -3,25 +3,9 @@ package passwordless
 import (
 	"context"
 	"encoding/json"
-	"os"
 	"testing"
 	"time"
-
-	"github.com/redis/go-redis/v9"
 )
-
-var redisClient *redis.Client
-
-func TestMain(m *testing.M) {
-	redisClient = redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-		DB: 1,
-	})
-
-	code := m.Run()
-	redisClient.FlushDB(context.Background())
-  os.Exit(code)
-}
 
 func TestRedisStore_StoreUserToken_NewUser(t *testing.T) {
 	redisStore := NewRedisStore(redisClient)
