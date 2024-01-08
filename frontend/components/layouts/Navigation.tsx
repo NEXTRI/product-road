@@ -3,30 +3,10 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Home,
-  MessageSquareText,
-  KanbanSquare,
-  Wallet,
-  Annoyed,
-} from "lucide-react";
+import { Annoyed } from "lucide-react";
+import { navigationMenu } from "../../data/constants";
 
-// Define types
-interface MenuItem {
-  id: number;
-  label: string;
-  url: string;
-  iconName?: React.ComponentType;
-}
-
-const menu: MenuItem[] = [
-  { id: 1, label: "Dashboard", url: "/", iconName: Home },
-  { id: 2, label: "FeedBacks", url: "/feedback", iconName: MessageSquareText },
-  { id: 3, label: "Kanban", url: "#", iconName: KanbanSquare },
-  { id: 4, label: "Billing", url: "#", iconName: Wallet },
-];
-
-function fetchMenuItem({ id, label, url, iconName }: MenuItem) {
+function fetchMenuItem({ id, label, url, iconName }: NavMenuItem) {
   const Icon = iconName || Annoyed;
   const currentRoute = usePathname();
   let className = currentRoute === url ? "active" : "";
@@ -44,7 +24,9 @@ function fetchMenuItem({ id, label, url, iconName }: MenuItem) {
 const Navigation: React.FC = () => {
   return (
     <nav>
-      <ul className="flex flex-col gap-8">{menu.map(fetchMenuItem)}</ul>
+      <ul className="flex flex-col gap-8">
+        {navigationMenu.map(fetchMenuItem)}
+      </ul>
     </nav>
   );
 };
