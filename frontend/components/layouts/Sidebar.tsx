@@ -2,8 +2,8 @@ import React from "react";
 import { Logo, Navigation, ComboboxDemo } from "./index";
 import { cn } from "@/lib/utils";
 
-const Sidebar = ({ sidebarOpen }) => {
-  const toggleStyle = sidebarOpen ? "-ml-[250px]" : "ml-0";
+const Sidebar = ({ sidebarOpen }: { sidebarOpen: boolean }) => {
+  const toggleStyle = sidebarOpen ? "ml-0" : "-ml-[250px]";
   return (
     <aside
       className={cn(

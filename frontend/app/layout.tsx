@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Head from "next/head";
 import { Inter } from "next/font/google";
 import { Sidebar, ToggleSidebar } from "../components/layouts";
 import "./globals.css";
@@ -12,16 +11,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
   return (
     <html lang="en">
-      <Head>
-        <title>My page title</title>
-      </Head>
       <body className={inter.className}>
         <div className="h-full flex">
           <Sidebar sidebarOpen={sidebarOpen} />
