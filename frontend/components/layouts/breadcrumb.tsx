@@ -1,4 +1,6 @@
+"use client";
 import React from "react";
+import { ChevronRight } from "lucide-react";
 
 interface BreadcrumbItemProps {
   href?: string;
@@ -14,7 +16,13 @@ export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({
   const itemClass = active ? "text-gray-500" : "text-gray-800";
   return (
     <li className={itemClass}>
-      {href ? <a href={href}>{children}</a> : <span>{children}</span>}
+      {href ? (
+        <a className="flex gap-1 items-center" href={href}>
+          {children} <ChevronRight size={14} />
+        </a>
+      ) : (
+        <span>{children}</span>
+      )}
     </li>
   );
 };
@@ -24,5 +32,5 @@ interface BreadcrumbProps {
 }
 
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({ children }) => {
-  return <ul className="breadcrumb">{children}</ul>;
+  return <ul className="breadcrumb flex gap-2">{children}</ul>;
 };
