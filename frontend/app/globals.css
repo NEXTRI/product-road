@@ -87,3 +87,6 @@ nav .active span {
 nav .active a {
   @apply text-white bg-primary rounded-lg shadow-lg px-5 py-2;
 }
+.page-title{
+  @apply font-bold text-xl mb-4 text-gray-800;
+}
