@@ -11,7 +11,7 @@ function fetchMenuItem({ id, label, url, iconName }: NavMenuItem) {
   const currentRoute = usePathname();
   let className = currentRoute === url ? "active" : "";
   return (
-    <li key={id} className={cn("px-8 relative text-gray-500", className)}>
+    <li key={id} className={cn("px-8 relative text-theme-gray", className)}>
       <span></span>
       <Link href={url} className="flex gap-2">
         <Icon />

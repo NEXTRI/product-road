@@ -53,10 +53,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4 gap-3">
+      <div className="flex items-center py-4 gap-3 mb-3">
         {filterOptions?.map((option) => {
           return (
             <Input
+              key={option}
               placeholder={`Filter ${option}...`}
               value={
                 (table.getColumn(option)?.getFilterValue() as string) ?? ""
@@ -64,19 +65,19 @@ export function DataTable<TData, TValue>({
               onChange={(event) =>
                 table.getColumn(option)?.setFilterValue(event.target.value)
               }
-              className="max-w-sm ring-0 focus-visible:ring-0 outline-0 focus-visible:ring-offset-0 shadow-sm"
+              className="max-w-sm ring-0 focus-visible:ring-0 outline-0 focus-visible:ring-offset-0 shadow-gray border-t-0"
             />
           );
         })}
       </div>
-      <div className="rounded-md border shadow-lg">
-        <Table className="bg-white overflow-hidden rounded-md ">
+      <div className="rounded-md shadow-gray bg-white">
+        <Table className="overflow-hidden rounded-md ">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="border-gray-100">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-theme-dark-gray">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -94,10 +95,11 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
+                  className="border-gray-100"
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="text-theme-gray py-5">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
