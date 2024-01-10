@@ -13,7 +13,7 @@ import { Breadcrumb, BreadcrumbItem } from "@/components/layouts/breadcrumb";
 // };
 const page = () => {
   const { data: feedbacks } = useFetch(url);
-
+  const filterOptions = ["category", "status"];
   return (
     <>
       <h1 className="page-title">Feedback List</h1>
@@ -21,9 +21,12 @@ const page = () => {
         <BreadcrumbItem href="/">Home</BreadcrumbItem>
         <BreadcrumbItem active>Feedback</BreadcrumbItem>
       </Breadcrumb>
-      {/* add filter */}
       <div className="my-4">
-        <DataTable columns={columns} data={feedbacks} />
+        <DataTable
+          columns={columns}
+          data={feedbacks}
+          filterOptions={filterOptions}
+        />
       </div>
     </>
   );

@@ -26,11 +26,13 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filterOptions?: string[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterOptions,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -52,24 +54,20 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex items-center py-4 gap-3">
-        <Input
-          placeholder="Filter Category..."
-          value={
-            (table.getColumn("category")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("category")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm ring-0 focus-visible:ring-0 outline-0 focus-visible:ring-offset-0 shadow-sm"
-        />
-        <Input
-          placeholder="Filter Status..."
-          value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("status")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm ring-0 focus-visible:ring-0 outline-0 focus-visible:ring-offset-0 shadow-sm"
-        />
+        {filterOptions?.map((option) => {
+          return (
+            <Input
+              placeholder={`Filter ${option}...`}
+              value={
+                (table.getColumn(option)?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn(option)?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm ring-0 focus-visible:ring-0 outline-0 focus-visible:ring-offset-0 shadow-sm"
+            />
+          );
+        })}
       </div>
       <div className="rounded-md border shadow-lg">
         <Table className="bg-white overflow-hidden rounded-md ">
