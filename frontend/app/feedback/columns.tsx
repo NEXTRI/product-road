@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -35,10 +35,16 @@ export const columns: ColumnDef<Feedback>[] = [
   {
     header: "Actions",
     id: "actions",
-    cell: () => (
-      <Link href="#" className="underline ">
-        View Detail
-      </Link>
-    ),
+    cell: ({
+      row: {
+        original: { id },
+      },
+    }) => {
+      return (
+        <Link href={`/feedbacks/${id}`} className="underline ">
+          View Detail
+        </Link>
+      );
+    },
   },
 ];
