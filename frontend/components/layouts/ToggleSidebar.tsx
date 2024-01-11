@@ -27,12 +27,12 @@ const ToggleSidebar = ({ sidebarOpen, toggleOpen }: Props) => {
             onClick={handleClick}
           >
             <span
-              className={`w-1 h-3 bg-slate-500 rounded-t-sm -mb-[2px] transition origin-bottom ${
+              className={`w-1 h-3 bg-zinc-500 shadow-lg rounded-t-sm -mb-[2px] transition origin-bottom ${
                 sidebarOpen ? "rotate-12" : "-rotate-12"
               }`}
             ></span>
             <span
-              className={`w-1 h-3 bg-slate-500 rounded-b-sm origin-top transition ${
+              className={`w-1 h-3 bg-zinc-500 shadow-lg rounded-b-sm origin-top transition ${
                 sidebarOpen ? "-rotate-12" : "rotate-12"
               }`}
             ></span>

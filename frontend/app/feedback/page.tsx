@@ -11,9 +11,10 @@ import { Breadcrumb, BreadcrumbItem } from "@/components/layouts/breadcrumb";
 //   title: "Feedbacks page",
 //   description: "some feedback, to generate later",
 // };
-const page = () => {
+const Feedback = () => {
   const { data: feedbacks } = useFetch(url);
   const filterOptions = ["category", "status"];
+
   return (
     <>
       <h1 className="page-title">Feedback List</h1>
@@ -32,4 +33,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Feedback;
