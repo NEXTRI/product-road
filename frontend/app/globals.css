@@ -82,8 +82,11 @@ main {
   overflow-y: auto;
 }
 nav .active span {
-  @apply absolute w-1 h-full left-0 bg-primary rounded-lg;
+  @apply absolute w-1 h-full left-0 bg-theme-purple-blue rounded-lg;
 }
 nav .active a {
-  @apply text-white bg-primary rounded-lg shadow-lg px-5 py-2;
+  @apply text-white bg-theme-purple-blue rounded-lg shadow-purple px-5 py-2;
+}
+.page-title{
+  @apply font-bold text-xl mb-4 text-theme-gray;
 }
