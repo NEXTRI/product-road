@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"net/smtp"
 	"os"
 	"os/signal"
 	"syscall"
@@ -14,6 +15,7 @@ import (
 	"github.com/nextri/product-road/authentication/repository/postgres"
 	"github.com/nextri/product-road/authentication/service"
 	"github.com/nextri/product-road/passwordless"
+	"github.com/redis/go-redis/v9"
 )
 
 func main() {
@@ -21,7 +23,7 @@ func main() {
 		log.Fatal("Error loading .env file:", err)
 	}
 
-  connectionString := os.Getenv("DATABASE_URL")
+  connectionString := os.Getenv("DATABASE_URL") + "?sslmode=disable" // TODO: make it configurable
 
   tokenConfig := passwordless.TokenConfig{
     Type: passwordless.TokenTypeString,
@@ -34,11 +36,27 @@ func main() {
 		log.Fatal("Failed to initialize PostgreSQL repository:", err)
 	}
 
-  logger := &passwordless.BufferLogger{}
+	host := os.Getenv("SMTP_HOST")
+	port := os.Getenv("SMTP_PORT")
+	username := os.Getenv("SMTP_USERNAME")
+	password := os.Getenv("SMTP_PASSWORD")
+	from := os.Getenv("SMTP_FROM")
+	auth := smtp.PlainAuth("", username, password, host)
+	addr := host + ":" + port
+	config := passwordless.SMTPConfig{
+		UseSSL: false,
+		Addr:   addr,
+		From:   from,
+		Auth:   auth,
+	}
+
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379",
+		DB: 1,
+	})
 
   userService := service.NewUserService(pgRepo)
-  // emailService := service.NewEmailService(passwordless.NewMemoryStore(), passwordless.NewLogTransport(logger), passwordless.NewToken(tokenConfig), tokenConfig)
-	emailService := service.NewEmailService(passwordless.NewMemoryStore(), passwordless.NewLogTransport(logger), passwordless.NewToken(tokenConfig), tokenConfig)
+	emailService := service.NewEmailService(passwordless.NewRedisStore(redisClient), passwordless.NewSMTPTransport(config), passwordless.NewToken(tokenConfig), tokenConfig)
   jwtService := service.NewJWTService()
 
   handler.InitServices(userService, emailService, jwtService)
