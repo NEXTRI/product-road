@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Annoyed } from "lucide-react";
 import { navigationMenu } from "../../data/constants";
 
-function fetchMenuItem({ id, label, url, iconName }: NavMenuItem) {
+function FetchMenuItem({ id, label, url, iconName }: NavMenuItem) {
   const Icon = iconName || Annoyed;
   const currentRoute = usePathname();
   let className = currentRoute === url ? "active" : "";
@@ -25,7 +25,7 @@ const Navigation: React.FC = () => {
   return (
     <nav>
       <ul className="flex flex-col gap-8">
-        {navigationMenu.map(fetchMenuItem)}
+        {navigationMenu.map(FetchMenuItem)}
       </ul>
     </nav>
   );

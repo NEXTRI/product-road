@@ -52,11 +52,13 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "theme-purple": "#1D01C6",
-        "theme-purple-shadow": "rgba(86, 59, 255, 0.11)",
-        "theme-purple-blue": "#563BFF",
-        "theme-dark-gray": "#131313",
-        "theme-gray": "#454545",
+        theme: {
+          purple: "#1D01C6",
+          "purple-shadow": "rgba(86, 59, 255, 0.11)",
+          "purple-blue": "#563BFF",
+          "dark-gray": "#131313",
+          gray: "#454545",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
