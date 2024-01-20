@@ -20,18 +20,18 @@ func (m *MockTokenStore) StoreUserToken(ctx context.Context, email, token string
 	return args.Error(0)
 }
 
-func (m *MockTokenStore) Exists(ctx context.Context, email string) (bool, time.Time,error) {
-	args := m.Called(ctx, email)
+func (m *MockTokenStore) Exists(ctx context.Context, token string) (bool, time.Time, error) {
+	args := m.Called(ctx, token)
 	return args.Bool(0), args.Get(1).(time.Time), args.Error(2)
 }
 
-func (m *MockTokenStore) Verify(ctx context.Context, email, token string) (bool, error) {
-	args := m.Called(ctx, email, token)
+func (m *MockTokenStore) Verify(ctx context.Context, token string) (bool, error) {
+	args := m.Called(ctx, token)
 	return args.Bool(0), args.Error(1)
 }
 
-func (m *MockTokenStore) Delete(ctx context.Context, email string) error {
-	args := m.Called(ctx, email)
+func (m *MockTokenStore) Delete(ctx context.Context, token string) error {
+	args := m.Called(ctx, token)
 	return args.Error(0)
 }
 
@@ -39,8 +39,8 @@ type MockTransport struct {
 	mock.Mock
 }
 
-func (m *MockTransport) SendToken(ctx context.Context, email, token string, tokenType passwordless.TokenType, isTemp bool) error {
-	args := m.Called(ctx, email, token, tokenType, isTemp)
+func (m *MockTransport) SendToken(ctx context.Context, email, token string, tokenType passwordless.TokenType) error {
+	args := m.Called(ctx, email, token, tokenType)
 	return args.Error(0)
 }
 
@@ -75,7 +75,7 @@ func TestEmailService_SendToken_MagicLink_ExistingUser(t *testing.T) {
 
   mockTokenStore.On("StoreUserToken", context.Background(), "test@example.com", mock.Anything, mock.Anything, false).Return(nil)
 
-  mockTransport.On("SendToken", context.Background(), "test@example.com", mock.Anything, tokenConfig.Type, false).Return(nil)
+  mockTransport.On("SendToken", context.Background(), "test@example.com", mock.Anything, tokenConfig.Type).Return(nil)
 
   err := emailService.SendToken(context.Background(), "test@example.com", false)
 
@@ -103,7 +103,7 @@ func TestEmailService_SendToken_MagicLink_NewUser(t *testing.T) {
 
   mockTokenStore.On("StoreUserToken", context.Background(), "test@example.com", mock.Anything, mock.Anything, true).Return(nil)
 
-  mockTransport.On("SendToken", context.Background(), "test@example.com", mock.Anything, tokenConfig.Type, true).Return(nil)
+  mockTransport.On("SendToken", context.Background(), "test@example.com", mock.Anything, tokenConfig.Type).Return(nil)
 
   err := emailService.SendToken(context.Background(), "test@example.com", true)
 
@@ -132,7 +132,7 @@ func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnTokenGeneration(t *testi
 
   mockTokenStore.On("StoreUserToken", context.Background(), "test@example.com", mock.Anything, mock.Anything, true).Return(errors.New("unexpected call to StoreUserToken"))
 
-  mockTransport.On("SendToken", context.Background(), "test@example.com", mock.Anything, tokenConfig.Type, true).Return(errors.New("unexpected call to SendToken"))
+  mockTransport.On("SendToken", context.Background(), "test@example.com", mock.Anything, tokenConfig.Type).Return(errors.New("unexpected call to SendToken"))
 
   err := emailService.SendToken(context.Background(), "test@example.com", true)
 
@@ -161,7 +161,7 @@ func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnStore(t *testing.T) {
 
   mockTokenStore.On("StoreUserToken", context.Background(), "test@example.com", mock.Anything, mock.Anything, true).Return(errors.New("mock StoreUserToken error"))
 
-  mockTransport.On("SendToken", context.Background(), "test@example.com", mock.Anything, tokenConfig.Type, true).Return(errors.New("unexpected call to SendToken"))
+  mockTransport.On("SendToken", context.Background(), "test@example.com", mock.Anything, tokenConfig.Type).Return(errors.New("unexpected call to SendToken"))
 
   err := emailService.SendToken(context.Background(), "test@example.com", true)
 
@@ -186,13 +186,14 @@ func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnSend(t *testing.T) {
 
   emailService := NewEmailService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
 
-  mockTokenGenerator.On("Generate").Return(mock.Anything, nil)
+	generatedToken := "generatedToken123"
+  mockTokenGenerator.On("Generate").Return(generatedToken, nil)
 
-  mockTokenStore.On("StoreUserToken", context.Background(), "test@example.com", mock.Anything, mock.Anything, true).Return(nil)
+  mockTokenStore.On("StoreUserToken", context.Background(), "test@example.com", generatedToken, mock.Anything, true).Return(nil)
 
-  mockTransport.On("SendToken", context.Background(), "test@example.com", mock.Anything, tokenConfig.Type, true).Return(errors.New("mock sendToken error"))
+  mockTransport.On("SendToken", context.Background(), "test@example.com", generatedToken, tokenConfig.Type).Return(errors.New("mock sendToken error"))
 
-  mockTokenStore.On("Delete", context.Background(), "test@example.com").Return(nil)
+  mockTokenStore.On("Delete", context.Background(), generatedToken).Return(nil)
 
   err := emailService.SendToken(context.Background(), "test@example.com", true)
 
