@@ -18,10 +18,9 @@ func NewRedisStore(client *redis.Client) *RedisStore {
 }
 
 // StoreUserToken stores a user token in Redis with a TTL and a flag indicating if it's temporary.
-func (r *RedisStore) StoreUserToken(ctx context.Context, email, token string, ttl time.Duration, isTemp bool) error {
+func (r *RedisStore) StoreUserToken(ctx context.Context, token, email string, ttl time.Duration, isTemp bool) error {
 	userToken := UserToken{
 		Email: email,
-		Token: token,
 		Expires: time.Now().Add(ttl),
 		IsTemp: isTemp,
 	}
@@ -36,12 +35,12 @@ func (r *RedisStore) StoreUserToken(ctx context.Context, email, token string, tt
 		return errors.New("invalid TTL: already expired")
 	}
 
-	return r.client.Set(ctx, email, userTokenJSON, remainingTTL).Err()
+	return r.client.Set(ctx, token, userTokenJSON, remainingTTL).Err()
 }
 
 // Exists checks if a token exists in the RedisStore.
-func (r *RedisStore) Exists(ctx context.Context, email string) (bool, time.Time, error) {
-	val, err := r.client.Get(ctx, email).Result()
+func (r *RedisStore) Exists(ctx context.Context, token string) (bool, time.Time, error) {
+	val, err := r.client.Get(ctx, token).Result()
 	if err == redis.Nil {
 		return false, time.Time{}, nil
 	} else if err != nil {
@@ -61,9 +60,9 @@ func (r *RedisStore) Exists(ctx context.Context, email string) (bool, time.Time,
 	return true, userToken.Expires, nil
 }
 
-// Verify checks if a token is valid for the specified email in the RedisStore.
-func (r *RedisStore) Verify(ctx context.Context, email, token string) (bool, error) {
-	val, err := r.client.Get(ctx, email).Result()
+// Verify checks if a token is valid in the RedisStore.
+func (r *RedisStore) Verify(ctx context.Context, token string) (bool, error) {
+	val, err := r.client.Get(ctx, token).Result()
 	if err == redis.Nil {
 		return false, nil
 	} else if err != nil {
@@ -76,7 +75,7 @@ func (r *RedisStore) Verify(ctx context.Context, email, token string) (bool, err
 		return false, err
 	}
 
-	if userToken.Token == token && time.Now().Before(userToken.Expires) {
+	if time.Now().Before(userToken.Expires) {
     return true, nil
   }
 
@@ -84,14 +83,14 @@ func (r *RedisStore) Verify(ctx context.Context, email, token string) (bool, err
 }
 
 // Delete removes a token from the RedisStore.
-func (r *RedisStore) Delete(ctx context.Context, email string) error {
-	result, err := r.client.Del(ctx, email).Result()
+func (r *RedisStore) Delete(ctx context.Context, token string) error {
+	result, err := r.client.Del(ctx, token).Result()
 	if err != nil {
 		return err
 	}
 
 	if result == 0 {
-		return errors.New("no token found for the specified email")
+		return ErrTokenNotFound
 	}
 
 	return nil

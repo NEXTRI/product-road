@@ -12,13 +12,13 @@ func TestMemoryStore_StoreUserToken_NewUser(t *testing.T) {
   token := "newUserToken123"
   ttl := 5 * time.Minute
 
-  err := memStore.StoreUserToken(context.Background(), email, token, ttl, true)
+  err := memStore.StoreUserToken(context.Background(), token, email, ttl, true)
 
   if err != nil {
     t.Fatalf("StoreUserToken failed for a new user: %v", err)
   }
 
-  isValid, err := memStore.Verify(context.Background(), email, token)
+  isValid, err := memStore.Verify(context.Background(), token)
 
   if err != nil {
     t.Fatalf("Verify failed for new user: %v", err)
@@ -45,13 +45,13 @@ func TestMemoryStore_StoreUserToken_ExistingUser(t *testing.T) {
   token := "existingUserToken456"
   ttl := 5 * time.Minute
 
-  err := memStore.StoreUserToken(context.Background(), email, token, ttl, false)
+  err := memStore.StoreUserToken(context.Background(), token, email, ttl, false)
 
   if err != nil {
     t.Fatalf("StoreUserToken failed for an existing user: %v", err)
   }
 
-  isValid, err := memStore.Verify(context.Background(), email, token)
+  isValid, err := memStore.Verify(context.Background(), token)
 
   if err != nil {
     t.Fatalf("Verify failed for existing user: %v", err)
@@ -61,7 +61,7 @@ func TestMemoryStore_StoreUserToken_ExistingUser(t *testing.T) {
     t.Error("Expected token for existing user to be valid, but it's not.")
   }
 
-  storedToken, ok := memStore.tokens[email]
+  storedToken, ok := memStore.tokens[token]
 
   if !ok {
     t.Fatal("Token was not stored correctly for existing user")

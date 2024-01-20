@@ -19,11 +19,11 @@ type TokenStore interface {
   StoreUserToken(ctx context.Context, email, token string, ttl time.Duration, isTemp bool) error
 
   // Exists checks if a token exists in the specified token store.
-  Exists(ctx context.Context, email string) (bool, time.Time, error)
+  Exists(ctx context.Context, token string) (bool, time.Time, error)
 
-  // Verify checks if a token is valid for the specified email.
-  Verify(ctx context.Context, email, token string) (bool, error)
+  // Verify checks if a token is valid.
+  Verify(ctx context.Context, token string) (bool, error)
 
   // Delete removes a token from the specified token store.
-  Delete(ctx context.Context, email string) error
+  Delete(ctx context.Context, token string) error
 }

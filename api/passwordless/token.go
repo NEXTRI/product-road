@@ -9,6 +9,13 @@ import (
 	"time"
 )
 
+// UserToken contains token details and an indicator for temporary user status.
+type UserToken struct {
+  Email   string
+  Expires time.Time
+  IsTemp  bool // Flag to indicate if it's a temporary user
+}
+
 // TokenType represents the type of token.
 type TokenType string
 

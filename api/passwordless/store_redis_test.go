@@ -14,13 +14,13 @@ func TestRedisStore_StoreUserToken_NewUser(t *testing.T) {
   token := "newUserToken123"
   ttl := 5 * time.Minute
 
-	err := redisStore.StoreUserToken(context.Background(), email, token, ttl, true)
+	err := redisStore.StoreUserToken(context.Background(), token, email, ttl, true)
 
 	if err != nil {
     t.Fatalf("StoreUserToken failed for a new user: %v", err)
   }
 
-	val, err := redisStore.client.Get(context.Background(), email).Result()
+	val, err := redisStore.client.Get(context.Background(), token).Result()
 
 	if err != nil {
 		t.Fatalf("failed to get token from Redis: %v", err)
@@ -44,13 +44,13 @@ func TestRedisStore_StoreUserToken_ExistingUser(t *testing.T) {
   token := "existingUserToken456"
   ttl := 5 * time.Minute
 
-	err := redisStore.StoreUserToken(context.Background(), email, token, ttl, false)
+	err := redisStore.StoreUserToken(context.Background(), token, email, ttl, false)
 
 	if err != nil {
     t.Fatalf("StoreUserToken failed for an existing user: %v", err)
   }
 
-	isValid, err := redisStore.Verify(context.Background(), email, token)
+	isValid, err := redisStore.Verify(context.Background(), token)
 
   if err != nil {
     t.Fatalf("Verify failed for existing user: %v", err)
@@ -60,7 +60,7 @@ func TestRedisStore_StoreUserToken_ExistingUser(t *testing.T) {
     t.Error("Expected token for existing user to be valid, but it's not.")
   }
 
-	val, err := redisStore.client.Get(context.Background(), email).Result()
+	val, err := redisStore.client.Get(context.Background(), token).Result()
 
 	if err != nil {
 		t.Fatalf("failed to get token from Redis: %v", err)
