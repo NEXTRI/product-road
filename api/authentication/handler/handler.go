@@ -12,14 +12,14 @@ import (
 
 var (
 	userService  *service.UserService
-	emailService *service.EmailService
-  jwtService service.JWTService
+	emailTokenService *service.EmailTokenService
+  tokenAuthService service.TokenAuthService
 )
 
-func InitServices(us *service.UserService, es *service.EmailService, js service.JWTService) {
+func InitServices(us *service.UserService, ets *service.EmailTokenService, tas service.TokenAuthService) {
   userService = us
-  emailService = es
-  jwtService = js
+  emailTokenService = ets
+  tokenAuthService = tas
 }
 
 // Response represents the JSON response structure
@@ -74,7 +74,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  err = emailService.SendToken(r.Context(), data.Email, !exists)
+  err = emailTokenService.SendToken(r.Context(), data.Email, !exists)
 
   if err != nil {
     writeJSONResponse(w, http.StatusInternalServerError, Response{
@@ -91,8 +91,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 type MagicLinkBodyRequest struct {
   Token string `json:"token"`
-  Email string `json:"email"`
-  Status string `json:"userStatus"`
 }
 
 // MagicLinkVerificationHandler verifies the token from the magic link & generates a JWT token.
@@ -114,15 +112,15 @@ func MagicLinkVerificationHandler(w http.ResponseWriter, r *http.Request) {
   }
   defer r.Body.Close()
 
-  if bodyReq.Token == "" || bodyReq.Email == "" {
+  if bodyReq.Token == "" {
     writeJSONResponse(w, http.StatusOK, Response{
-      Message: "email and token are required",
+      Message: "token is required",
       Error: err.Error(),
     })
     return
   }
 
-  isValid, err := emailService.VerifyToken(r.Context(), bodyReq.Email, bodyReq.Token)
+  isValid, err := emailTokenService.VerifyToken(r.Context(), bodyReq.Token)
 
   if err != nil || !isValid {
     writeJSONResponse(w, http.StatusOK, Response{
@@ -132,8 +130,18 @@ func MagicLinkVerificationHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  if bodyReq.Status == "temporary" {
-    user := &model.User{Email: bodyReq.Email}
+	tokenData, err := emailTokenService.GetTokenData(r.Context(), bodyReq.Token)
+
+	if err != nil {
+		writeJSONResponse(w, http.StatusInternalServerError, Response{
+			Message: "Failed to retrieve token data",
+			Error: err.Error(),
+		})
+		return
+	}
+
+  if tokenData.IsTemp {
+    user := &model.User{Email: tokenData.Email}
     err = userService.CreateUser(r.Context(), user)
 
     if err != nil {
@@ -145,7 +153,7 @@ func MagicLinkVerificationHandler(w http.ResponseWriter, r *http.Request) {
     }
   }
 
-  accessToken, err := jwtService.GenerateToken(bodyReq.Email)
+  accessToken, err := tokenAuthService.GenerateAuthToken(tokenData.Email)
 
   if err != nil {
     writeJSONResponse(w, http.StatusOK, Response{
@@ -156,10 +164,10 @@ func MagicLinkVerificationHandler(w http.ResponseWriter, r *http.Request) {
   }
 
   // Delete the token from the store (for both temporary and existing users)
-  err = emailService.DeleteToken(r.Context(), bodyReq.Email)
+  err = emailTokenService.DeleteToken(r.Context(), bodyReq.Token)
   if err != nil {
     // TODO: handle error properly
-    log.Printf("Error deleting token for email %s: %v", bodyReq.Email, err)
+    log.Printf("Error deleting token %s: %v", bodyReq.Token, err)
   }
 
   writeJSONResponse(w, http.StatusOK, Response{

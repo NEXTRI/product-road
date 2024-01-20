@@ -56,10 +56,10 @@ func main() {
 	})
 
   userService := service.NewUserService(pgRepo)
-	emailService := service.NewEmailService(passwordless.NewRedisStore(redisClient), passwordless.NewSMTPTransport(config), passwordless.NewToken(tokenConfig), tokenConfig)
-  jwtService := service.NewJWTService()
+	emailTokenService := service.NewEmailTokenService(passwordless.NewRedisStore(redisClient), passwordless.NewSMTPTransport(config), passwordless.NewToken(tokenConfig), tokenConfig)
+  tokenAuthService := service.NewTokenAuthService()
 
-  handler.InitServices(userService, emailService, jwtService)
+  handler.InitServices(userService, emailTokenService, tokenAuthService)
 
   http.HandleFunc("/api/v1/auth/login", handler.LoginHandler)
   http.HandleFunc("/api/v1/auth/verify", handler.MagicLinkVerificationHandler)
