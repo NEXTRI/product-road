@@ -7,10 +7,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGenerateToken(t *testing.T) {
-  jwtService := NewJWTService()
+func TestTokenAuthService_GenerateAuthToken(t *testing.T) {
+  tokenService := NewTokenAuthService()
   email := "test@example.com"
-  tokenString, err := jwtService.GenerateToken(email)
+  tokenString, err := tokenService.GenerateAuthToken(email)
 
   assert.Nil(t, err)
   assert.NotEmpty(t, tokenString)
@@ -27,15 +27,15 @@ func TestGenerateToken(t *testing.T) {
   }
 }
 
-func TestValidateToken(t *testing.T) {
-  jwtService := NewJWTService()
+func TestTokenAuthService_ValidateAuthToken(t *testing.T) {
+  jwtService := NewTokenAuthService()
   email := "test@example.com"
-  tokenString, _ := jwtService.GenerateToken(email)
+  tokenString, _ := jwtService.GenerateAuthToken(email)
 
-  claims, err := jwtService.ValidateToken(tokenString)
+  claims, err := jwtService.ValidateAuthToken(tokenString)
   assert.Nil(t, err)
   assert.Equal(t, email, claims.Email)
 
-  _, err = jwtService.ValidateToken("invalid.token.here")
+  _, err = jwtService.ValidateAuthToken("invalidToken")
   assert.NotNil(t, err)
 }

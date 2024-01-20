@@ -13,22 +13,22 @@ type Claims struct {
   jwt.RegisteredClaims
 }
 
-type JWTService interface {
-  GenerateToken(email string) (string, error)
-  ValidateToken(tokenString string) (*Claims, error)
+type TokenAuthService interface {
+  GenerateAuthToken(email string) (string, error)
+  ValidateAuthToken(tokenString string) (*Claims, error)
 }
 
-type jwtService struct {
+type tokenAuthServiceImpl struct {
   secretKey []byte
 }
 
-// NewJWTService creates a new JWTService with the secret key
-func NewJWTService() JWTService {
-	return &jwtService{ secretKey: jwtKey}
+// NewTokenAuthService creates a new instance of TokenAuthService with the provided secret key.
+func NewTokenAuthService() TokenAuthService {
+	return &tokenAuthServiceImpl{ secretKey: jwtKey}
 }
 
 // GenerateToken generates a new JWT token for a given email
-func (j *jwtService) GenerateToken(email string) (string, error) {
+func (j *tokenAuthServiceImpl) GenerateAuthToken(email string) (string, error) {
   expirationTime := time.Now().Add(15 * time.Minute)
   claims := &Claims{
 		Email: email,
@@ -49,7 +49,7 @@ func (j *jwtService) GenerateToken(email string) (string, error) {
 }
 
 // ValidateToken checks the token string, parses the token, and returns the claims
-func (j *jwtService) ValidateToken(tokenString string) (*Claims, error) {
+func (j *tokenAuthServiceImpl) ValidateAuthToken(tokenString string) (*Claims, error) {
   claims := &Claims{}
 
   token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
