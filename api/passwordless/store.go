@@ -26,4 +26,7 @@ type TokenStore interface {
 
   // Delete removes a token from the specified token store.
   Delete(ctx context.Context, token string) error
+
+	// GetTokenData retrieves the data associated with a token.
+	GetTokenData(ctx context.Context, token string) (UserToken, error)
 }

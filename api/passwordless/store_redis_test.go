@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRedisStore_StoreUserToken_NewUser(t *testing.T) {
@@ -75,4 +77,25 @@ func TestRedisStore_StoreUserToken_ExistingUser(t *testing.T) {
 	if userToken.IsTemp {
     t.Error("Expected IsTemp to be false for existing user, but it was true")
   }
+}
+
+func TestRedisStore_GetTokenData(t *testing.T) {
+	redisStore := NewRedisStore(redisClient)
+
+	email := "existinguser@test.com"
+  token := "existingUserToken456"
+  ttl := 5 * time.Minute
+	isTemp := false
+
+	err := redisStore.StoreUserToken(context.Background(), token, email, ttl, isTemp)
+  assert.NoError(t, err, "storing token should not produce an error")
+
+	retrievedToken, err := redisStore.GetTokenData(context.Background(), token)
+	assert.NoError(t, err, "retrieving existing token should not produce an error")
+	assert.Equal(t, email, retrievedToken.Email, "retrieved token email should match stored email")
+	assert.Equal(t, isTemp, retrievedToken.IsTemp, "retrieved token temporary status should match stored status")
+
+	_, err = redisStore.GetTokenData(context.Background(), "nonExistingToken")
+	assert.Error(t, err, "Retrieving non-existing token should produce an error")
+	assert.Equal(t, ErrTokenNotFound, err, "Error should be ErrTokenNotFound for non-existing token")
 }

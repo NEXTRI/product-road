@@ -95,3 +95,21 @@ func (r *RedisStore) Delete(ctx context.Context, token string) error {
 
 	return nil
 }
+
+// GetTokenData retrieves the user token data associated with a given token.
+func (r *RedisStore) GetTokenData(ctx context.Context, token string) (UserToken, error) {
+	val, err := r.client.Get(ctx, token).Result()
+	if err == redis.Nil {
+		return UserToken{}, ErrTokenNotFound
+	} else if err != nil {
+		return UserToken{}, err
+	}
+
+	var userToken UserToken
+	err = json.Unmarshal([]byte(val), &userToken)
+	if err != nil {
+		return UserToken{}, err
+	}
+
+	return userToken, nil
+}

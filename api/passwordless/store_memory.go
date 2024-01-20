@@ -84,6 +84,17 @@ func (s *MemoryStore) Delete(ctx context.Context, token string) error {
 	return nil
 }
 
+// GetTokenData retrieves the user token data associated with a given token.
+func (s *MemoryStore) GetTokenData(ctx context.Context, token string) (UserToken, error) {
+	s.mx.Lock()
+	defer s.mx.Unlock()
+
+	if userToken, ok := s.tokens[token]; ok {
+		return userToken, nil
+	}
+	return UserToken{}, ErrTokenNotFound
+}
+
 // Clean removes expired entries from the store.
 func (s *MemoryStore) Clean() {
 	s.mx.Lock()
