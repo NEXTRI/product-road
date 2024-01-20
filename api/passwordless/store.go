@@ -16,7 +16,7 @@ var (
 type TokenStore interface {
   // StoreUserToken stores a user token in the specified token store.
   // The isTemp parameter indicates whether the token is for a temporary user.
-  StoreUserToken(ctx context.Context, email, token string, ttl time.Duration, isTemp bool) error
+  StoreUserToken(ctx context.Context, token, email string, ttl time.Duration, isTemp bool) error
 
   // Exists checks if a token exists in the specified token store.
   Exists(ctx context.Context, token string) (bool, time.Time, error)

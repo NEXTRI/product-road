@@ -28,7 +28,7 @@ func (es *EmailTokenService) SendToken(ctx context.Context, email string, isTemp
 		return err
 	}
 
-  err = es.tokenStore.StoreUserToken(ctx, email, token, es.tokenConfig.ExpiryTime, isTemp)
+  err = es.tokenStore.StoreUserToken(ctx, token, email, es.tokenConfig.ExpiryTime, isTemp)
 
   if err != nil {
 		return err
