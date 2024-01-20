@@ -122,9 +122,17 @@ func MagicLinkVerificationHandler(w http.ResponseWriter, r *http.Request) {
 
   isValid, err := emailTokenService.VerifyToken(r.Context(), bodyReq.Token)
 
-  if err != nil || !isValid {
+	if !isValid {
     writeJSONResponse(w, http.StatusOK, Response{
       Message: "invalid or expired token",
+      Error: err.Error(),
+    })
+    return
+  }
+
+  if err != nil {
+    writeJSONResponse(w, http.StatusOK, Response{
+      Message: "error verifying token",
       Error: err.Error(),
     })
     return

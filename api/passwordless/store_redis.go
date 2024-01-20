@@ -64,7 +64,7 @@ func (r *RedisStore) Exists(ctx context.Context, token string) (bool, time.Time,
 func (r *RedisStore) Verify(ctx context.Context, token string) (bool, error) {
 	val, err := r.client.Get(ctx, token).Result()
 	if err == redis.Nil {
-		return false, nil
+		return false, ErrTokenNotFound
 	} else if err != nil {
 		return false, err
 	}
