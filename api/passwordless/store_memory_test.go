@@ -28,7 +28,7 @@ func TestMemoryStore_StoreUserToken_NewUser(t *testing.T) {
     t.Error("Expected token for new user to be valid, but it's not.")
   }
 
-  storedToken, ok := memStore.tokens[email]
+  storedToken, ok := memStore.tokens[token]
 
   if !ok {
     t.Fatal("Token was not stored correctly for new user")
