@@ -35,6 +35,11 @@ func (m *MockTokenStore) Delete(ctx context.Context, token string) error {
 	return args.Error(0)
 }
 
+func (m *MockTokenStore) GetTokenData(ctx context.Context, token string) (passwordless.UserToken, error) {
+	args := m.Called(ctx, token)
+	return args.Get(0).(passwordless.UserToken), args.Error(1)
+}
+
 type MockTransport struct {
 	mock.Mock
 }
@@ -58,7 +63,7 @@ func (m *MockTokenGenerator) GetExpiryTime() time.Time {
 	return args.Get(0).(time.Time)
 }
 
-func TestEmailService_SendToken_MagicLink_ExistingUser(t *testing.T) {
+func TestEmailTokenService_SendToken_MagicLink_ExistingUser(t *testing.T) {
   mockTokenStore := new(MockTokenStore)
   mockTransport := new(MockTransport)
   mockTokenGenerator := new(MockTokenGenerator)
@@ -69,7 +74,7 @@ func TestEmailService_SendToken_MagicLink_ExistingUser(t *testing.T) {
 		Length:     32,
 	}
 
-  emailService := NewEmailService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
+  emailService := NewEmailTokenService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
 
   mockTokenGenerator.On("Generate").Return(mock.Anything, nil)
 
@@ -86,7 +91,7 @@ func TestEmailService_SendToken_MagicLink_ExistingUser(t *testing.T) {
   mockTokenGenerator.AssertExpectations(t)
 }
 
-func TestEmailService_SendToken_MagicLink_NewUser(t *testing.T) {
+func TestEmailTokenService_SendToken_MagicLink_NewUser(t *testing.T) {
   mockTokenStore := new(MockTokenStore)
   mockTransport := new(MockTransport)
   mockTokenGenerator := new(MockTokenGenerator)
@@ -97,7 +102,7 @@ func TestEmailService_SendToken_MagicLink_NewUser(t *testing.T) {
 		Length:     32,
 	}
 
-  emailService := NewEmailService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
+  emailService := NewEmailTokenService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
 
   mockTokenGenerator.On("Generate").Return(mock.Anything, nil)
 
@@ -114,7 +119,7 @@ func TestEmailService_SendToken_MagicLink_NewUser(t *testing.T) {
   mockTokenGenerator.AssertExpectations(t)
 }
 
-func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnTokenGeneration(t *testing.T) {
+func TestEmailTokenService_SendTokenMagicLink_NewUser_ErrorOnTokenGeneration(t *testing.T) {
  
   mockTokenStore := new(MockTokenStore)
   mockTransport := new(MockTransport)
@@ -126,7 +131,7 @@ func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnTokenGeneration(t *testi
 		Length:     32,
 	}
 
-  emailService := NewEmailService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
+  emailService := NewEmailTokenService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
 
   mockTokenGenerator.On("Generate").Return("", errors.New("mock generate error"))
 
@@ -143,7 +148,7 @@ func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnTokenGeneration(t *testi
   mockTokenGenerator.AssertExpectations(t)
 }
 
-func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnStore(t *testing.T) {
+func TestEmailTokenService_SendTokenMagicLink_NewUser_ErrorOnStore(t *testing.T) {
  
   mockTokenStore := new(MockTokenStore)
   mockTransport := new(MockTransport)
@@ -155,7 +160,7 @@ func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnStore(t *testing.T) {
 		Length:     32,
 	}
 
-  emailService := NewEmailService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
+  emailService := NewEmailTokenService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
 
   mockTokenGenerator.On("Generate").Return(mock.Anything, nil)
 
@@ -172,7 +177,7 @@ func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnStore(t *testing.T) {
   mockTokenGenerator.AssertExpectations(t)
 }
 
-func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnSend(t *testing.T) {
+func TestEmailTokenService_SendTokenMagicLink_NewUser_ErrorOnSend(t *testing.T) {
  
   mockTokenStore := new(MockTokenStore)
   mockTransport := new(MockTransport)
@@ -184,7 +189,7 @@ func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnSend(t *testing.T) {
 		Length:     32,
 	}
 
-  emailService := NewEmailService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
+  emailService := NewEmailTokenService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
 
 	generatedToken := "generatedToken123"
   mockTokenGenerator.On("Generate").Return(generatedToken, nil)
@@ -202,4 +207,34 @@ func TestEmailService_SendTokenMagicLink_NewUser_ErrorOnSend(t *testing.T) {
   mockTokenStore.AssertExpectations(t)
   mockTransport.AssertExpectations(t)
   mockTokenGenerator.AssertExpectations(t)
+}
+
+func TestEmailTokenService_GetTokenData(t *testing.T) {
+	mockTokenStore := new(MockTokenStore)
+	mockTransport := new(MockTransport)
+	mockTokenGenerator := new(MockTokenGenerator)
+
+	tokenConfig := passwordless.TokenConfig{
+		Type:       passwordless.TokenTypeString,
+		ExpiryTime: 5 * time.Minute,
+		Length:     32,
+	}
+
+	emailService := NewEmailTokenService(mockTokenStore, mockTransport, mockTokenGenerator, tokenConfig)
+
+	token := "testToken"
+	expectedUserToken := passwordless.UserToken{
+		Email:   "user@example.com",
+		Expires: time.Now().Add(5 * time.Minute),
+		IsTemp:  true,
+	}
+
+	mockTokenStore.On("GetTokenData", context.Background(), token).Return(expectedUserToken, nil)
+
+	retrievedToken, err := emailService.GetTokenData(context.Background(), token)
+
+	assert.NoError(t, err, "GetTokenData should not return an error")
+	assert.Equal(t, expectedUserToken, retrievedToken, "Retrieved token data should match the expected data")
+
+	mockTokenStore.AssertExpectations(t)
 }
