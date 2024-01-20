@@ -26,13 +26,13 @@ func NewSMTPTransport(config SMTPConfig) *SMTPTransport {
 }
 
 // SendToken sends a token using the log transport.
-func (s *SMTPTransport) SendToken(ctx context.Context, email, token string, tokenType TokenType, isTemp bool) error {
+func (s *SMTPTransport) SendToken(ctx context.Context, email, token string, tokenType TokenType) error {
 	baseURL := os.Getenv("APP_BASE_URL")
 	if baseURL == "" {
 		baseURL = "http://localhost:8080"
 	}
 
-	subject, body := composeEmail(email, token, tokenType, isTemp, baseURL)
+	subject, body := composeEmail(token, tokenType, baseURL)
 	to := []string{email}
 	msg := []byte("To: " + email + "\r\n" +
 		"Subject: " + subject + "\r\n" +
@@ -46,16 +46,10 @@ func (s *SMTPTransport) SendToken(ctx context.Context, email, token string, toke
 	}
 }
 
-func composeEmail(email, token string, tokenType TokenType, isTemp bool, baseURL string) (subject, body string) {
+func composeEmail(token string, tokenType TokenType, baseURL string) (subject, body string) {
 	switch tokenType {
 	case TokenTypeString:
-		var userStatus string
-		if isTemp {
-			userStatus = "temporary"
-		} else {
-			userStatus = "existing"
-		}
-		magicLink := fmt.Sprintf("%s/authenticate?token=%s&email=%s&userStatus=%s", baseURL, token, email, userStatus)
+		magicLink := fmt.Sprintf("%s/authenticate?token=%s", baseURL, token)
 		subject = "Your Magic Link"
 		body = fmt.Sprintf("Hello,\n\nPlease use the following link to login: %s", magicLink)
 	case TokenTypePin:

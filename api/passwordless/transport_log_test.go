@@ -24,7 +24,7 @@ func TestLogTransport_SendToken_MagicLink_NewUser(t *testing.T) {
 	r, w, _ := os.Pipe()
 	os.Stdout = w
 
-	err := logTransport.SendToken(context.Background(), email, token, TokenTypeString, true)
+	err := logTransport.SendToken(context.Background(), email, token, TokenTypeString)
 
 	// Restore the standard output
 	w.Close()
@@ -38,7 +38,7 @@ func TestLogTransport_SendToken_MagicLink_NewUser(t *testing.T) {
 		t.Errorf("SendToken failed: %v", err)
 	}
 
-	expectedLog := fmt.Sprintf("Magic link sent to %s (temporary user): %s/authenticate?token=%s&email=%s&userStatus=temporary\n", email, testBaseURL, token, email)
+	expectedLog := fmt.Sprintf("Magic link sent to %s: %s/authenticate?token=%s\n", email, testBaseURL, token)
 
 	if log := buf.String(); log != expectedLog {
 		t.Errorf("Expected log: %s, got: %s", expectedLog, log)
@@ -60,7 +60,7 @@ func TestLogTransport_SendToken_CodePIN_NewUser(t *testing.T) {
 	r, w, _ := os.Pipe()
 	os.Stdout = w
 
-	err := logTransport.SendToken(context.Background(), email, pin, TokenTypePin, true)
+	err := logTransport.SendToken(context.Background(), email, pin, TokenTypePin)
 
 	// Restore the standard output
 	w.Close()
@@ -74,7 +74,7 @@ func TestLogTransport_SendToken_CodePIN_NewUser(t *testing.T) {
 		t.Errorf("SendToken failed: %v", err)
 	}
 
-	expectedLog := fmt.Sprintf("PIN sent to %s (temporary user): %s\n", email, pin)
+	expectedLog := fmt.Sprintf("PIN sent to %s: %s\n", email, pin)
 
 	if log := buf.String(); log != expectedLog {
 		t.Errorf("Expected log: %s, got: %s", expectedLog, log)
@@ -97,7 +97,7 @@ func TestLogTransport_SendToken_MagicLink_ExistingUser(t *testing.T) {
 	r, w, _ := os.Pipe()
 	os.Stdout = w
 
-	err := logTransport.SendToken(context.Background(), email, token, TokenTypeString, false)
+	err := logTransport.SendToken(context.Background(), email, token, TokenTypeString)
 
 	// Restore the standard output
 	w.Close()
@@ -111,7 +111,7 @@ func TestLogTransport_SendToken_MagicLink_ExistingUser(t *testing.T) {
 		t.Errorf("SendToken failed: %v", err)
 	}
 
-	expectedLog := fmt.Sprintf("Magic link sent to %s (existing user): %s/authenticate?token=%s&email=%s&userStatus=existing\n", email, testBaseURL, token, email)
+	expectedLog := fmt.Sprintf("Magic link sent to %s: %s/authenticate?token=%s\n", email, testBaseURL, token)
 
 	if log := buf.String(); log != expectedLog {
 		t.Errorf("Expected log: %s, got: %s", expectedLog, log)
@@ -133,7 +133,7 @@ func TestLogTransport_SendToken_CodePIN_ExistingUser(t *testing.T) {
 	r, w, _ := os.Pipe()
 	os.Stdout = w
 
-	err := logTransport.SendToken(context.Background(), email, pin, TokenTypePin, false)
+	err := logTransport.SendToken(context.Background(), email, pin, TokenTypePin)
 
 	// Restore the standard output
 	w.Close()
@@ -147,7 +147,7 @@ func TestLogTransport_SendToken_CodePIN_ExistingUser(t *testing.T) {
 		t.Errorf("SendToken failed: %v", err)
 	}
 
-	expectedLog := fmt.Sprintf("PIN sent to %s (existing user): %s\n", email, pin)
+	expectedLog := fmt.Sprintf("PIN sent to %s: %s\n", email, pin)
 
 	if log := buf.String(); log != expectedLog {
 		t.Errorf("Expected log: %s, got: %s", expectedLog, log)
