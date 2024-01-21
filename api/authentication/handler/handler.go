@@ -26,7 +26,8 @@ func InitServices(us *service.UserService, ets *service.EmailTokenService, tas s
 type Response struct {
 	Message string `json:"message"`
 	Error   string `json:"error,omitempty"`
-  Token   string `json:"token,omitempty"`
+  AccessToken   string `json:"access_token,omitempty"`
+	RefreshToken   string `json:"refresh_token,omitempty"`
 }
 
 type RequestData struct {
@@ -161,11 +162,20 @@ func MagicLinkVerificationHandler(w http.ResponseWriter, r *http.Request) {
     }
   }
 
-  accessToken, err := tokenAuthService.GenerateAuthToken(tokenData.Email)
+  accessToken, err := tokenAuthService.GenerateAuthToken(tokenData.Email, "access")
+	if err != nil {
+    writeJSONResponse(w, http.StatusOK, Response{
+      Message: "failed to generate access token",
+      Error: err.Error(),
+    })
+    return
+  }
+
+	refreshToken, err := tokenAuthService.GenerateAuthToken(tokenData.Email, "refresh")
 
   if err != nil {
     writeJSONResponse(w, http.StatusOK, Response{
-      Message: "failed to generate token",
+      Message: "failed to generate refresh token",
       Error: err.Error(),
     })
     return
@@ -180,6 +190,7 @@ func MagicLinkVerificationHandler(w http.ResponseWriter, r *http.Request) {
 
   writeJSONResponse(w, http.StatusOK, Response{
     Message: "Authentication successful",
-    Token:   accessToken,
+    AccessToken:   accessToken,
+		RefreshToken: refreshToken,
   })
 }

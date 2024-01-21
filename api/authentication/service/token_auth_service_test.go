@@ -10,7 +10,7 @@ import (
 func TestTokenAuthService_GenerateAuthToken(t *testing.T) {
   tokenService := NewTokenAuthService()
   email := "test@example.com"
-  tokenString, err := tokenService.GenerateAuthToken(email)
+  tokenString, err := tokenService.GenerateAuthToken(email, "access")
 
   assert.Nil(t, err)
   assert.NotEmpty(t, tokenString)
@@ -30,7 +30,7 @@ func TestTokenAuthService_GenerateAuthToken(t *testing.T) {
 func TestTokenAuthService_ValidateAuthToken(t *testing.T) {
   jwtService := NewTokenAuthService()
   email := "test@example.com"
-  tokenString, _ := jwtService.GenerateAuthToken(email)
+  tokenString, _ := jwtService.GenerateAuthToken(email, "refresh")
 
   claims, err := jwtService.ValidateAuthToken(tokenString)
   assert.Nil(t, err)

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -8,13 +9,21 @@ import (
 
 var jwtKey = []byte("K2Lh0k5F4WhaU8@@1879996")
 
+// TokenType defines the type of JWT token (access or refresh).
+type TokenType string
+
+const (
+	AccessToken  TokenType = "access"
+	RefreshToken TokenType = "refresh"
+)
+
 type Claims struct {
   Email string `json:"email"`
   jwt.RegisteredClaims
 }
 
 type TokenAuthService interface {
-  GenerateAuthToken(email string) (string, error)
+  GenerateAuthToken(email string, tokenType TokenType) (string, error)
   ValidateAuthToken(tokenString string) (*Claims, error)
 }
 
@@ -28,8 +37,18 @@ func NewTokenAuthService() TokenAuthService {
 }
 
 // GenerateToken generates a new JWT token for a given email
-func (j *tokenAuthServiceImpl) GenerateAuthToken(email string) (string, error) {
-  expirationTime := time.Now().Add(15 * time.Minute)
+func (j *tokenAuthServiceImpl) GenerateAuthToken(email string, tokenType TokenType) (string, error) {
+  var expirationTime time.Time
+
+	switch tokenType {
+	case AccessToken:
+		expirationTime = time.Now().Add(15 * time.Minute)
+	case RefreshToken:
+		expirationTime = time.Now().Add(24 * time.Hour)
+	default:
+    return "", fmt.Errorf("invalid token type: %s", tokenType)
+	}
+	
   claims := &Claims{
 		Email: email,
 		RegisteredClaims: jwt.RegisteredClaims{
