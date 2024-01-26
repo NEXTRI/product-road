@@ -84,3 +84,29 @@ func (repo *ProjectRepository) UpdateProject(ctx context.Context, project *Proje
 
 	return nil
 }
+
+// DeleteProject deletes a project from the database by its ID.
+func (repo *ProjectRepository) DeleteProject(ctx context.Context, projectID int) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	result, err := repo.db.ExecContext(ctx, "DELETE FROM projects WHERE id = $1", projectID)
+
+	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return fmt.Errorf("timeout exceeded while deleting project")
+		}
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error getting rows affected after deleting project: %v", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("no project found with ID %d", projectID)
+	}
+
+	return nil
+}

@@ -96,3 +96,18 @@ func TestProjectRepository_UpdateProject(t *testing.T) {
 
 	assert.NoError(t, err)
 }
+
+func TestProjectRepository_DeleteProject(t *testing.T) {
+	mock.ExpectExec("DELETE FROM projects WHERE id = \\$1").
+		WithArgs(project.ID).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	repo := &ProjectRepository{db}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err := repo.DeleteProject(ctx, project.ID)
+
+	assert.NoError(t, err)
+}
