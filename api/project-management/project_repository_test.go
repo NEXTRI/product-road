@@ -81,3 +81,18 @@ func TestProjectRepository_GetProjectByID(t *testing.T) {
 	assert.Equal(t, project.CreatedAt, retrievedProject.CreatedAt)
 	assert.Equal(t, project.UpdatedAt, retrievedProject.UpdatedAt)
 }
+
+func TestProjectRepository_UpdateProject(t *testing.T) {
+	mock.ExpectExec("UPDATE projects SET name = \\$1, description = \\$2, updated_at = \\$3 WHERE id = \\$4").
+		WithArgs(project.Name, project.Description, project.UpdatedAt, project.ID).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	repo := &ProjectRepository{db}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err := repo.UpdateProject(ctx, project)
+
+	assert.NoError(t, err)
+}

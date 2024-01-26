@@ -55,3 +55,32 @@ func (repo *ProjectRepository) GetProjectByID(ctx context.Context, projectID int
 
 	return &project, nil
 }
+
+// UpdateProject updates an existing project in the database.
+func (repo *ProjectRepository) UpdateProject(ctx context.Context, project *Project) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	result, err := repo.db.ExecContext(ctx,
+		"UPDATE projects SET name = $1, description = $2, updated_at = $3 WHERE id = $4",
+		project.Name, project.Description, project.UpdatedAt, project.ID,
+	)
+
+	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return fmt.Errorf("timeout exceeded while updating project")
+		}
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error getting rows affected after updating project: %v", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("no project found with ID %d", project.ID)
+	}
+
+	return nil
+}
