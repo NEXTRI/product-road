@@ -56,6 +56,38 @@ func (repo *ProjectRepository) GetProjectByID(ctx context.Context, projectID int
 	return &project, nil
 }
 
+// GetAllProjects retrieves all projects for a specific user from the database.
+func (repo *ProjectRepository) GetAllProjects(ctx context.Context, userID int) ([]*Project, error) {
+	var projects []*Project
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	rows, err := repo.db.QueryContext(ctx, "SELECT * FROM projects WHERE user_id = $1", userID)
+	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return nil, fmt.Errorf("timeout exceeded while trying to get all projects")
+		}
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var project Project
+		err := rows.Scan(&project.ID, &project.UserID, &project.Name, &project.Description, &project.CreatedAt, &project.UpdatedAt)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning project row: %v", err)
+		}
+		projects = append(projects, &project)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating over projects rows: %v", err)
+	}
+
+	return projects, nil
+}
+
 // UpdateProject updates an existing project in the database.
 func (repo *ProjectRepository) UpdateProject(ctx context.Context, project *Project) error {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
