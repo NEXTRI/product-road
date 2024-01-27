@@ -25,7 +25,7 @@ func (repo *ProjectRepository) CreateProject(ctx context.Context, project *Proje
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	err := repo.db.QueryRowContext(ctx, "INSERT INTO projects (name, description, created_at, updated_at) VALUES ($1, $2, $3, $4) RETURNING id", project.Name, project.Description, project.CreatedAt, project.UpdatedAt).Scan(&projectID)
+	err := repo.db.QueryRowContext(ctx, "INSERT INTO projects (name, user_id, description, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id", project.Name, project.UserID, project.Description, project.CreatedAt, project.UpdatedAt).Scan(&projectID)
 
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
@@ -44,7 +44,7 @@ func (repo *ProjectRepository) GetProjectByID(ctx context.Context, projectID int
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	err := repo.db.QueryRowContext(ctx, "SELECT * FROM projects WHERE id = $1", projectID).Scan(&project.ID, &project.Name, &project.Description, &project.CreatedAt, &project.UpdatedAt)
+	err := repo.db.QueryRowContext(ctx, "SELECT * FROM projects WHERE id = $1", projectID).Scan(&project.ID, &project.Name, &project.UserID, &project.Description, &project.CreatedAt, &project.UpdatedAt)
 
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
