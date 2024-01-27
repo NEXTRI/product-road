@@ -1,31 +1,30 @@
-package projectmanagement
+package postgres
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	"time"
+
+	"github.com/nextri/product-road/model"
 )
 
-// ProjectRepository handles database operations related to projects.
-type ProjectRepository struct {
-	db *sql.DB
-}
+// UserRepositoryImp is a PostgreSQL implementation of the UserRepository interface.
+type ProjectRepositoryImp struct{}
 
-// NewProjectRepository creates a new instance of ProjectRepository.
-func NewProjectRepository(db *sql.DB) *ProjectRepository {
-	return &ProjectRepository{db: db}
+// NewUserRepository creates a new UserRepository instance.
+func NewProjectRepository() *ProjectRepositoryImp {
+  return &ProjectRepositoryImp{}
 }
 
 // CreateProject inserts a new project into the database.
-func (repo *ProjectRepository) CreateProject(ctx context.Context, project *Project) (int, error) {
+func (r *ProjectRepositoryImp) CreateProject(ctx context.Context, project *model.Project) (int, error) {
 	var projectID int
 
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	err := repo.db.QueryRowContext(ctx, "INSERT INTO projects (name, user_id, description, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id", project.Name, project.UserID, project.Description, project.CreatedAt, project.UpdatedAt).Scan(&projectID)
+	err := db.QueryRowContext(ctx, "INSERT INTO projects (name, user_id, description, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id", project.Name, project.UserID, project.Description, project.CreatedAt, project.UpdatedAt).Scan(&projectID)
 
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
@@ -38,13 +37,13 @@ func (repo *ProjectRepository) CreateProject(ctx context.Context, project *Proje
 }
 
 // GetProjectByID retrieves a project from the database by its ID.
-func (repo *ProjectRepository) GetProjectByID(ctx context.Context, projectID int) (*Project, error) {
-	var project Project
+func (r *ProjectRepositoryImp) GetProjectByID(ctx context.Context, projectID int) (*model.Project, error) {
+	var project model.Project
 
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	err := repo.db.QueryRowContext(ctx, "SELECT * FROM projects WHERE id = $1", projectID).Scan(&project.ID, &project.Name, &project.UserID, &project.Description, &project.CreatedAt, &project.UpdatedAt)
+	err := db.QueryRowContext(ctx, "SELECT * FROM projects WHERE id = $1", projectID).Scan(&project.ID, &project.Name, &project.UserID, &project.Description, &project.CreatedAt, &project.UpdatedAt)
 
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
@@ -57,13 +56,13 @@ func (repo *ProjectRepository) GetProjectByID(ctx context.Context, projectID int
 }
 
 // GetAllProjects retrieves all projects for a specific user from the database.
-func (repo *ProjectRepository) GetAllProjects(ctx context.Context, userID int) ([]*Project, error) {
-	var projects []*Project
+func (r *ProjectRepositoryImp) GetAllProjects(ctx context.Context, userID int) ([]*model.Project, error) {
+	var projects []*model.Project
 
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	rows, err := repo.db.QueryContext(ctx, "SELECT * FROM projects WHERE user_id = $1", userID)
+	rows, err := db.QueryContext(ctx, "SELECT * FROM projects WHERE user_id = $1", userID)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
 			return nil, fmt.Errorf("timeout exceeded while trying to get all projects")
@@ -73,7 +72,7 @@ func (repo *ProjectRepository) GetAllProjects(ctx context.Context, userID int) (
 	defer rows.Close()
 
 	for rows.Next() {
-		var project Project
+		var project model.Project
 		err := rows.Scan(&project.ID, &project.UserID, &project.Name, &project.Description, &project.CreatedAt, &project.UpdatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("error scanning project row: %v", err)
@@ -89,11 +88,11 @@ func (repo *ProjectRepository) GetAllProjects(ctx context.Context, userID int) (
 }
 
 // UpdateProject updates an existing project in the database.
-func (repo *ProjectRepository) UpdateProject(ctx context.Context, project *Project) error {
+func (r *ProjectRepositoryImp) UpdateProject(ctx context.Context, project *model.Project) error {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	result, err := repo.db.ExecContext(ctx,
+	result, err := db.ExecContext(ctx,
 		"UPDATE projects SET name = $1, description = $2, updated_at = $3 WHERE id = $4",
 		project.Name, project.Description, project.UpdatedAt, project.ID,
 	)
@@ -118,11 +117,11 @@ func (repo *ProjectRepository) UpdateProject(ctx context.Context, project *Proje
 }
 
 // DeleteProject deletes a project from the database by its ID.
-func (repo *ProjectRepository) DeleteProject(ctx context.Context, projectID int) error {
+func (r *ProjectRepositoryImp) DeleteProject(ctx context.Context, projectID int) error {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	result, err := repo.db.ExecContext(ctx, "DELETE FROM projects WHERE id = $1", projectID)
+	result, err := db.ExecContext(ctx, "DELETE FROM projects WHERE id = $1", projectID)
 
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {

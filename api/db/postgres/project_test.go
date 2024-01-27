@@ -1,46 +1,22 @@
-package projectmanagement
+package postgres
 
 import (
 	"context"
-	"database/sql"
-	"log"
-	"os"
 	"testing"
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/nextri/product-road/model"
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	db   *sql.DB
-	mock sqlmock.Sqlmock
-)
-
-var project = &Project{
+var project = &model.Project{
 	ID:          1,
 	Name:        "Test Project",
 	UserID:      1,
 	Description: "Test Description",
 	CreatedAt:   time.Now(),
 	UpdatedAt:   time.Now(),
-}
-
-func TestMain(m *testing.M) {
-	var err error
-	db, mock, err = sqlmock.New()
-	if err != nil {
-		log.Fatalf("error creating mock: %v", err)
-	}
-	defer db.Close()
-
-	exitVal := m.Run()
-
-	if err := mock.ExpectationsWereMet(); err != nil {
-		log.Fatalf("expectations not met: %v", err)
-	}
-
-	os.Exit(exitVal)
 }
 
 func TestProjectRepository_CreateProject(t *testing.T) {
@@ -50,7 +26,7 @@ func TestProjectRepository_CreateProject(t *testing.T) {
 		WithArgs(project.Name, project.UserID, project.Description, project.CreatedAt, project.UpdatedAt).
 		WillReturnRows(rows)
 
-	repo := &ProjectRepository{db}
+	repo := NewProjectRepository()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -68,7 +44,7 @@ func TestProjectRepository_GetProjectByID(t *testing.T) {
 		WithArgs(project.ID).
 		WillReturnRows(rows)
 
-	repo := &ProjectRepository{db}
+	repo := NewProjectRepository()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -92,7 +68,7 @@ func TestProjectRepository_GetAllProjects(t *testing.T) {
 		WithArgs(project.UserID).
 		WillReturnRows(rows)
 
-	repo := &ProjectRepository{db}
+	repo := NewProjectRepository()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -116,7 +92,7 @@ func TestProjectRepository_UpdateProject(t *testing.T) {
 		WithArgs(project.Name, project.Description, project.UpdatedAt, project.ID).
 		WillReturnResult(sqlmock.NewResult(0, 1))
 
-	repo := &ProjectRepository{db}
+	repo := NewProjectRepository()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -131,7 +107,7 @@ func TestProjectRepository_DeleteProject(t *testing.T) {
 		WithArgs(project.ID).
 		WillReturnResult(sqlmock.NewResult(0, 1))
 
-	repo := &ProjectRepository{db}
+	repo := NewProjectRepository()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

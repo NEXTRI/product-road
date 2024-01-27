@@ -39,6 +39,7 @@ func TestUserService_CreateUser(t *testing.T) {
 	
   userService := NewUserService(repo)
 
+	repo.On("CheckEmailExists", mock.Anything, mock.Anything).Return(false, nil)
   repo.On("CreateUser", mock.Anything, mock.Anything).Return(utils.ErrEmailExists)
 
   user := &model.User{

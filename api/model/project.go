@@ -1,7 +1,8 @@
-package projectmanagement
+package model
 
 import "time"
 
+// Project represents a project in the system.
 type Project struct {
 	ID          int       `json:"id"`
 	Name        string    `json:"name"`
