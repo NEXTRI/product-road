@@ -1,22 +1,22 @@
-package handler
+package auth
 
 import (
 	"encoding/json"
 	"log"
 	"net/http"
 
-	"github.com/nextri/product-road/authentication/model"
-	"github.com/nextri/product-road/authentication/service"
-	"github.com/nextri/product-road/authentication/utils"
+	"github.com/nextri/product-road/model"
+	"github.com/nextri/product-road/service"
+	"github.com/nextri/product-road/utils"
 )
 
 var (
 	userService  *service.UserService
-	emailTokenService *service.EmailTokenService
-  tokenAuthService service.TokenAuthService
+	emailTokenService *EmailTokenService
+  tokenAuthService TokenAuthService
 )
 
-func InitServices(us *service.UserService, ets *service.EmailTokenService, tas service.TokenAuthService) {
+func InitServices(us *service.UserService, ets *EmailTokenService, tas TokenAuthService) {
   userService = us
   emailTokenService = ets
   tokenAuthService = tas

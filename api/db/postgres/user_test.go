@@ -2,25 +2,25 @@ package postgres
 
 import (
 	"context"
-	"database/sql"
 	"log"
 	"os"
 	"testing"
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/nextri/product-road/authentication/model"
+
+	"github.com/nextri/product-road/model"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-  db   *sql.DB
-  mock sqlmock.Sqlmock
+	mock   sqlmock.Sqlmock
 )
 
 var user = &model.User{
-	ID:    1,
-	Email: "test@test.com",
+	ID:       1,
+	Email:    "test@test.com",
+	Username: "testuser",
 }
 
 func TestMain(m *testing.M) {
@@ -40,23 +40,22 @@ func TestMain(m *testing.M) {
   os.Exit(exitVal)
 }
 
-func TestPostgresRepository_CheckEmailExists(t *testing.T) {
+func TestUserRepository_CheckEmailExists(t *testing.T) {
+	rows := sqlmock.NewRows([]string{"exists"}).AddRow(true)
 
-  rows := sqlmock.NewRows([]string{"exists"}).AddRow(true)
+	mock.ExpectQuery("SELECT EXISTS \\(SELECT 1 FROM users WHERE email = \\$1\\)").
+		WithArgs(user.Email).
+		WillReturnRows(rows)
 
-  mock.ExpectQuery("SELECT EXISTS \\(SELECT 1 FROM users WHERE email = \\$1\\)").
-	WithArgs(user.Email).
-	WillReturnRows(rows)
+	repo := NewUserRepository()
 
-  repo := &PostgresRepository{db}
-
-  ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-  exists, err := repo.CheckEmailExists(ctx, user.Email)
+	exists, err := repo.CheckEmailExists(ctx, user.Email)
 
-  assert.NoError(t, err)
-  assert.True(t, exists)
+	assert.NoError(t, err)
+	assert.True(t, exists)
 }
 
 func TestPostgresRepository_CreateUser(t *testing.T) {
@@ -65,7 +64,7 @@ func TestPostgresRepository_CreateUser(t *testing.T) {
     WithArgs(user.Email).
     WillReturnResult(createUserResult)
 
-  repo := &PostgresRepository{db}
+  repo := NewUserRepository()
 
   ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
   defer cancel()
@@ -82,7 +81,7 @@ func TestPostgresRepository_GetUserByID(t *testing.T) {
   WithArgs(user.ID).
   WillReturnRows(rows)
 
-  repo := &PostgresRepository{db}
+  repo := NewUserRepository()
 
   ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
   defer cancel()
@@ -107,7 +106,7 @@ func TestPostgresRepository_GetUserByEmail(t *testing.T) {
   WithArgs(user.Email).
   WillReturnRows(rows)
 
-  repo := &PostgresRepository{db}
+  repo := NewUserRepository()
 
   ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
   defer cancel()

@@ -1,13 +1,13 @@
-package repository
+package db
 
 import (
 	"context"
 
-	"github.com/nextri/product-road/authentication/model"
+	"github.com/nextri/product-road/model"
 )
 
-// Repository represent the repositories
-type Repository interface {
+// UserRepository defines the interface for user-related data access operations.
+type UserRepository interface {
 	CheckEmailExists(ctx context.Context, email string) (bool, error)
 	CreateUser(ctx context.Context, user *model.User) error
 	GetUserByID(ctx context.Context, id int) (*model.User, error)

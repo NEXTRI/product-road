@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/nextri/product-road/authentication/model"
-	"github.com/nextri/product-road/authentication/utils"
+	"github.com/nextri/product-road/model"
+	"github.com/nextri/product-road/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

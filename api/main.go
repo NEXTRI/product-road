@@ -11,10 +11,10 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/nextri/product-road/authentication/handler"
-	"github.com/nextri/product-road/authentication/repository/postgres"
-	"github.com/nextri/product-road/authentication/service"
+	authModule "github.com/nextri/product-road/auth"
+	"github.com/nextri/product-road/db/postgres"
 	"github.com/nextri/product-road/passwordless"
+	"github.com/nextri/product-road/service"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -23,17 +23,15 @@ func main() {
 		log.Fatal("Error loading .env file:", err)
 	}
 
-  connectionString := os.Getenv("DATABASE_URL") + "?sslmode=disable" // TODO: make it configurable
-
   tokenConfig := passwordless.TokenConfig{
     Type: passwordless.TokenTypeString,
     ExpiryTime: 5 * time.Minute,
     Length: 32,
   }
-  
-	pgRepo, err := postgres.NewPostgresRepository(connectionString)
-  if err != nil {
-		log.Fatal("Failed to initialize PostgreSQL repository:", err)
+
+	err := postgres.Connect()
+	if err != nil {
+		log.Fatalf("Failed to connect to the database: %v", err)
 	}
 
 	host := os.Getenv("SMTP_HOST")
@@ -55,14 +53,14 @@ func main() {
 		DB: 1,
 	})
 
-  userService := service.NewUserService(pgRepo)
-	emailTokenService := service.NewEmailTokenService(passwordless.NewRedisStore(redisClient), passwordless.NewSMTPTransport(config), passwordless.NewToken(tokenConfig), tokenConfig)
-  tokenAuthService := service.NewTokenAuthService()
+  userService := service.NewUserService(postgres.NewUserRepository())
+	emailTokenService := authModule.NewEmailTokenService(passwordless.NewRedisStore(redisClient), passwordless.NewSMTPTransport(config), passwordless.NewToken(tokenConfig), tokenConfig)
+  tokenAuthService := authModule.NewTokenAuthService()
 
-  handler.InitServices(userService, emailTokenService, tokenAuthService)
+  authModule.InitServices(userService, emailTokenService, tokenAuthService)
 
-  http.HandleFunc("/api/v1/auth/login", handler.LoginHandler)
-  http.HandleFunc("/api/v1/auth/verify", handler.MagicLinkVerificationHandler)
+  http.HandleFunc("/api/v1/auth/login", authModule.LoginHandler)
+  http.HandleFunc("/api/v1/auth/verify", authModule.MagicLinkVerificationHandler)
 
   // Health check endpoint
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
