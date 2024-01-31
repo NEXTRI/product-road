@@ -14,6 +14,7 @@ import (
 	authModule "github.com/nextri/product-road/auth"
 	"github.com/nextri/product-road/db/postgres"
 	"github.com/nextri/product-road/passwordless"
+	pmModule "github.com/nextri/product-road/project-management"
 	"github.com/nextri/product-road/service"
 	"github.com/redis/go-redis/v9"
 )
@@ -61,6 +62,11 @@ func main() {
 
   http.HandleFunc("/api/v1/auth/login", authModule.LoginHandler)
   http.HandleFunc("/api/v1/auth/verify", authModule.MagicLinkVerificationHandler)
+
+	projectService := service.NewProjectService(postgres.NewProjectRepository())
+	pmModule.InitServices(projectService)
+
+	http.HandleFunc("/api/v1/projects/create", pmModule.CreateProjectHandler)
 
   // Health check endpoint
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
