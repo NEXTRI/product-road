@@ -3,6 +3,8 @@ package projectmanagement
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/nextri/product-road/model"
@@ -77,5 +79,47 @@ func CreateProjectHandler(w http.ResponseWriter, r *http.Request) {
 	writeJSONResponse(w, http.StatusCreated, Response{
 		Message: "Project created successfully",
 		Project: project,
+	})
+}
+
+// DeleteProjectHandler handles the deletion of a project by ID.
+func DeleteProjectHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		writeJSONResponse(w, http.StatusMethodNotAllowed, Response{
+			Error:   "Only DELETE method is allowed",
+			Message: "Invalid HTTP method",
+		})
+		return
+	}
+
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) < 5 || parts[4] == "" {
+		writeJSONResponse(w, http.StatusBadRequest, Response{
+			Error:   "Project ID is required",
+			Message: "Missing project ID",
+		})
+		return
+	}
+
+	projectID, err := strconv.Atoi(parts[4])
+	if err != nil {
+		writeJSONResponse(w, http.StatusBadRequest, Response{
+			Error:   "Invalid project ID format",
+			Message: "Invalid project ID",
+		})
+		return
+	}
+
+	err = pmService.DeleteProject(r.Context(), projectID)
+	if err != nil {
+		writeJSONResponse(w, http.StatusInternalServerError, Response{
+			Error:   err.Error(),
+			Message: "Failed to delete project",
+		})
+		return
+	}
+
+	writeJSONResponse(w, http.StatusOK, Response{
+		Message: "Project deleted successfully",
 	})
 }

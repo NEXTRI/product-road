@@ -68,6 +68,15 @@ func main() {
 
 	http.HandleFunc("/api/v1/projects/create", pmModule.CreateProjectHandler)
 
+	http.HandleFunc("/api/v1/projects/", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+			case http.MethodDelete:
+				pmModule.DeleteProjectHandler(w, r)
+			default:
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
   // Health check endpoint
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
