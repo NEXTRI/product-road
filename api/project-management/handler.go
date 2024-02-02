@@ -82,6 +82,66 @@ func CreateProjectHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// UpdateProjectHandler handles the update of a project by ID.
+func UpdateProjectHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPut {
+		writeJSONResponse(w, http.StatusMethodNotAllowed, Response{
+			Error:   "Only PUT method is allowed",
+			Message: "Invalid HTTP method",
+		})
+		return
+	}
+
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) < 5 || parts[4] == "" {
+		writeJSONResponse(w, http.StatusBadRequest, Response{
+			Error:   "Project ID is required",
+			Message: "Missing project ID",
+		})
+		return
+	}
+
+	projectID, err := strconv.Atoi(parts[4])
+	if err != nil {
+		writeJSONResponse(w, http.StatusBadRequest, Response{
+			Error:   "Invalid project ID format",
+			Message: "Invalid project ID",
+		})
+		return
+	}
+
+	var requestData RequestData
+	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+		writeJSONResponse(w, http.StatusBadRequest, Response{
+			Error:   err.Error(),
+			Message: "Invalid request body",
+		})
+		return
+	}
+
+	project := &model.Project{
+		ID:          projectID,
+		Name:        requestData.Name,
+		UserID:      requestData.UserID,
+		Description: requestData.Description,
+		UpdatedAt:   time.Now(),
+	}
+
+	err = pmService.UpdateProject(r.Context(), project)
+	if err != nil {
+		writeJSONResponse(w, http.StatusInternalServerError, Response{
+			Error:   err.Error(),
+			Message: "Failed to update project",
+		})
+		return
+	}
+
+	writeJSONResponse(w, http.StatusOK, Response{
+		Message: "Project updated successfully",
+		Project: project,
+	})
+}
+
 // DeleteProjectHandler handles the deletion of a project by ID.
 func DeleteProjectHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {

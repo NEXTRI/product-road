@@ -72,6 +72,8 @@ func main() {
 		switch r.Method {
 			case http.MethodDelete:
 				pmModule.DeleteProjectHandler(w, r)
+			case http.MethodPut:
+				pmModule.UpdateProjectHandler(w, r)
 			default:
 				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
