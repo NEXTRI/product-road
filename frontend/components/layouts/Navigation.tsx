@@ -9,7 +9,8 @@ import { navigationMenu } from "../../data/constants";
 function FetchMenuItem({ id, label, url, iconName }: NavMenuItem) {
   const Icon = iconName || Annoyed;
   const currentRoute = usePathname();
-  let className = currentRoute === url ? "active" : "";
+  let className =
+    currentRoute === url || currentRoute.startsWith(url + "/") ? "active" : "";
   return (
     <li key={id} className={cn("px-8 relative text-theme-gray", className)}>
       <span></span>
