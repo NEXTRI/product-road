@@ -41,7 +41,7 @@ export const columns: ColumnDef<Feedback>[] = [
       },
     }) => {
       return (
-        <Link href={`/feedbacks/${id}`} className="underline ">
+        <Link href={`/feedback/${id}`} className="underline">
           View Detail
         </Link>
       );

@@ -1,22 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { AxiosResponse } from "axios";
+import axiosInstance from "@/lib/api";
 
-interface FetchResult {
-  data: Feedback[];
+interface FetchResult<T> {
+  data: T | [];
   loading: boolean;
   error: unknown;
 }
 
-const useFetch = (url: string): FetchResult => {
-  const [data, setData] = useState<Feedback[]>([]);
+const useFetch = <T>(url: string): FetchResult<T> => {
+  const [data, setData] = useState<T | []>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<unknown>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(url);
+        const response: AxiosResponse<T> = await axiosInstance.get(url);
+        console.log(response.data);
         setData(response.data);
         setLoading(false);
       } catch (error: unknown) {
