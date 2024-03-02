@@ -21,6 +21,7 @@ type Response struct {
 	Message       string           `json:"message"`
 	Error         string           `json:"error,omitempty"`
 	Project       *model.Project   `json:"project,omitempty"`
+	Projects      []*model.Project `json:"projects,omitempty"`
 }
 
 // RequestData represents the JSON request data structure
@@ -35,6 +36,26 @@ func writeJSONResponse(w http.ResponseWriter, status int, resp Response) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(resp)
+}
+
+// GetProjectsHandler handles the retrieval of all projects.
+func GetAllProjectsHandler(w http.ResponseWriter, r *http.Request) {
+	// INFO: temporary get user id from header X-User-ID, will be removed later after auth is implemented properly
+	userID, _ := strconv.Atoi(r.Header.Get("X-User-ID"))
+
+	projects, err := pmService.GetAllProjects(r.Context(), userID)
+	if err != nil {
+		writeJSONResponse(w, http.StatusInternalServerError, Response{
+			Error:   err.Error(),
+			Message: "Failed to retrieve projects",
+		})
+		return
+	}
+
+	writeJSONResponse(w, http.StatusOK, Response{
+		Message: "Projects retrieved successfully",
+		Projects: projects,
+	})
 }
 
 // CreateProjectHandler handles the creation of a new project.
