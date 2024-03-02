@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -37,16 +38,18 @@ func (r *ProjectRepositoryImp) CreateProject(ctx context.Context, project *model
 }
 
 // GetProjectByID retrieves a project from the database by its ID.
-func (r *ProjectRepositoryImp) GetProjectByID(ctx context.Context, projectID int) (*model.Project, error) {
+func (r *ProjectRepositoryImp) GetProjectByID(ctx context.Context, projectID, userID int) (*model.Project, error) {
 	var project model.Project
 
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	err := db.QueryRowContext(ctx, "SELECT * FROM projects WHERE id = $1", projectID).Scan(&project.ID, &project.UserID, &project.Name, &project.Description, &project.CreatedAt, &project.UpdatedAt)
+	err := db.QueryRowContext(ctx, "SELECT * FROM projects WHERE id = $1 AND user_id = $2", projectID, userID).Scan(&project.ID, &project.UserID, &project.Name, &project.Description, &project.CreatedAt, &project.UpdatedAt)
 
 	if err != nil {
-		if errors.Is(err, context.DeadlineExceeded) {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, fmt.Errorf("project not found or user does not have access to the project")
+		} else if errors.Is(err, context.DeadlineExceeded) {
 			return nil, fmt.Errorf("timeout exceeded while trying to get project by ID")
 		}
 		return nil, err

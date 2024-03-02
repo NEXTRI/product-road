@@ -17,7 +17,7 @@ type UserRepository interface {
 // ProjectRepository defines the interface for project-related data access operations.
 type ProjectRepository interface {
 	CreateProject(ctx context.Context, project *model.Project) (int, error)
-	GetProjectByID(ctx context.Context, projectID int) (*model.Project, error)
+	GetProjectByID(ctx context.Context, projectID, userID int) (*model.Project, error)
 	GetAllProjects(ctx context.Context, userID int) ([]*model.Project, error)
 	UpdateProject(ctx context.Context, project *model.Project) error
 	DeleteProject(ctx context.Context, projectID int) error

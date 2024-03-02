@@ -40,8 +40,8 @@ func TestProjectRepository_GetProjectByID(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"id", "user_id", "name", "description", "created_at", "updated_at"}).
 		AddRow(project.ID, project.UserID, project.Name, project.Description, project.CreatedAt, project.UpdatedAt)
 
-	mock.ExpectQuery("SELECT \\* FROM projects WHERE id = \\$1").
-		WithArgs(project.ID).
+	mock.ExpectQuery("SELECT \\* FROM projects WHERE id = \\$1 AND user_id = \\$2").
+		WithArgs(project.ID, project.UserID).
 		WillReturnRows(rows)
 
 	repo := NewProjectRepository()
@@ -49,7 +49,7 @@ func TestProjectRepository_GetProjectByID(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	retrievedProject, err := repo.GetProjectByID(ctx, project.ID)
+	retrievedProject, err := repo.GetProjectByID(ctx, project.ID, project.UserID)
 	assert.NoError(t, err)
 	assert.NotNil(t, retrievedProject)
 	assert.Equal(t, project.ID, retrievedProject.ID)
