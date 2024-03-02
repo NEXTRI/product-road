@@ -1,2 +1,2 @@
 ALTER TABLE "projects"
-ADD COLUMN "description" varchar;
+ADD COLUMN "description" varchar AFTER "name";
