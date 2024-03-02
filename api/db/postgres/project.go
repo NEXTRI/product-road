@@ -73,7 +73,7 @@ func (r *ProjectRepositoryImp) GetAllProjects(ctx context.Context, userID int) (
 
 	for rows.Next() {
 		var project model.Project
-		err := rows.Scan(&project.ID, &project.UserID, &project.Name, &project.Description, &project.CreatedAt, &project.UpdatedAt)
+		err := rows.Scan(&project.ID, &project.Name, &project.UserID, &project.Description, &project.CreatedAt, &project.UpdatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("error scanning project row: %v", err)
 		}
