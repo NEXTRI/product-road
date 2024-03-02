@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/nextri/product-road/model"
@@ -40,14 +39,6 @@ func writeJSONResponse(w http.ResponseWriter, status int, resp Response) {
 
 // CreateProjectHandler handles the creation of a new project.
 func CreateProjectHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		writeJSONResponse(w, http.StatusMethodNotAllowed, Response{
-			Error:   "Only POST method is allowed",
-			Message: "Invalid HTTP method",
-		})
-		return
-	}
-
 	var requestData RequestData
 	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
 		writeJSONResponse(w, http.StatusBadRequest, Response{
@@ -84,24 +75,9 @@ func CreateProjectHandler(w http.ResponseWriter, r *http.Request) {
 
 // UpdateProjectHandler handles the update of a project by ID.
 func UpdateProjectHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPut {
-		writeJSONResponse(w, http.StatusMethodNotAllowed, Response{
-			Error:   "Only PUT method is allowed",
-			Message: "Invalid HTTP method",
-		})
-		return
-	}
+	idString := r.PathValue("id")
 
-	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) < 5 || parts[4] == "" {
-		writeJSONResponse(w, http.StatusBadRequest, Response{
-			Error:   "Project ID is required",
-			Message: "Missing project ID",
-		})
-		return
-	}
-
-	projectID, err := strconv.Atoi(parts[4])
+	projectID, err := strconv.Atoi(idString)
 	if err != nil {
 		writeJSONResponse(w, http.StatusBadRequest, Response{
 			Error:   "Invalid project ID format",
@@ -144,24 +120,9 @@ func UpdateProjectHandler(w http.ResponseWriter, r *http.Request) {
 
 // DeleteProjectHandler handles the deletion of a project by ID.
 func DeleteProjectHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
-		writeJSONResponse(w, http.StatusMethodNotAllowed, Response{
-			Error:   "Only DELETE method is allowed",
-			Message: "Invalid HTTP method",
-		})
-		return
-	}
+	idString := r.PathValue("id")
 
-	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) < 5 || parts[4] == "" {
-		writeJSONResponse(w, http.StatusBadRequest, Response{
-			Error:   "Project ID is required",
-			Message: "Missing project ID",
-		})
-		return
-	}
-
-	projectID, err := strconv.Atoi(parts[4])
+	projectID, err := strconv.Atoi(idString)
 	if err != nil {
 		writeJSONResponse(w, http.StatusBadRequest, Response{
 			Error:   "Invalid project ID format",

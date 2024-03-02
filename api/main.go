@@ -60,24 +60,15 @@ func main() {
 
   authModule.InitServices(userService, emailTokenService, tokenAuthService)
 
-  http.HandleFunc("/api/v1/auth/login", authModule.LoginHandler)
-  http.HandleFunc("/api/v1/auth/verify", authModule.MagicLinkVerificationHandler)
+  http.HandleFunc("POST /api/v1/auth/login", authModule.LoginHandler)
+  http.HandleFunc("POST /api/v1/auth/verify", authModule.MagicLinkVerificationHandler)
 
 	projectService := service.NewProjectService(postgres.NewProjectRepository())
 	pmModule.InitServices(projectService)
 
-	http.HandleFunc("/api/v1/projects/create", pmModule.CreateProjectHandler)
-
-	http.HandleFunc("/api/v1/projects/", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-			case http.MethodDelete:
-				pmModule.DeleteProjectHandler(w, r)
-			case http.MethodPut:
-				pmModule.UpdateProjectHandler(w, r)
-			default:
-				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		}
-	})
+	http.HandleFunc("POST /api/v1/projects", pmModule.CreateProjectHandler)
+	http.HandleFunc("PUT /api/v1/projects/{id}", pmModule.UpdateProjectHandler)
+	http.HandleFunc("DELETE /api/v1/projects/{id}", pmModule.DeleteProjectHandler)
 
   // Health check endpoint
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {

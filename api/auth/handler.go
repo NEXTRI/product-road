@@ -42,12 +42,7 @@ func writeJSONResponse(w http.ResponseWriter, status int, resp Response) {
 }
 
 // LoginHandler manages the user authentication request.
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
-  if r.Method != http.MethodPost {
-    http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
-    return
-  }
-  
+func LoginHandler(w http.ResponseWriter, r *http.Request) {  
   var data RequestData
 
   err := json.NewDecoder(r.Body).Decode(&data)
@@ -96,11 +91,6 @@ type MagicLinkBodyRequest struct {
 
 // MagicLinkVerificationHandler verifies the token from the magic link & generates a JWT token.
 func MagicLinkVerificationHandler(w http.ResponseWriter, r *http.Request) {
-  if r.Method != http.MethodPost {
-    http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
-    return
-  }
-
   var bodyReq MagicLinkBodyRequest
 
   err := json.NewDecoder(r.Body).Decode(&bodyReq)
@@ -116,7 +106,6 @@ func MagicLinkVerificationHandler(w http.ResponseWriter, r *http.Request) {
   if bodyReq.Token == "" {
     writeJSONResponse(w, http.StatusOK, Response{
       Message: "token is required",
-      Error: err.Error(),
     })
     return
   }
