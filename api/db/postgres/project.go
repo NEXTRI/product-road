@@ -24,7 +24,7 @@ func (r *ProjectRepositoryImp) CreateProject(ctx context.Context, project *model
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	err := db.QueryRowContext(ctx, "INSERT INTO projects (name, user_id, description, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id", project.Name, project.UserID, project.Description, project.CreatedAt, project.UpdatedAt).Scan(&projectID)
+	err := db.QueryRowContext(ctx, "INSERT INTO projects (user_id, name, description, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id", project.UserID, project.Name, project.Description, project.CreatedAt, project.UpdatedAt).Scan(&projectID)
 
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
@@ -43,7 +43,7 @@ func (r *ProjectRepositoryImp) GetProjectByID(ctx context.Context, projectID int
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	err := db.QueryRowContext(ctx, "SELECT * FROM projects WHERE id = $1", projectID).Scan(&project.ID, &project.Name, &project.UserID, &project.Description, &project.CreatedAt, &project.UpdatedAt)
+	err := db.QueryRowContext(ctx, "SELECT * FROM projects WHERE id = $1", projectID).Scan(&project.ID, &project.UserID, &project.Name, &project.Description, &project.CreatedAt, &project.UpdatedAt)
 
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
@@ -73,7 +73,7 @@ func (r *ProjectRepositoryImp) GetAllProjects(ctx context.Context, userID int) (
 
 	for rows.Next() {
 		var project model.Project
-		err := rows.Scan(&project.ID, &project.Name, &project.UserID, &project.Description, &project.CreatedAt, &project.UpdatedAt)
+		err := rows.Scan(&project.ID, &project.UserID, &project.Name, &project.Description, &project.CreatedAt, &project.UpdatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("error scanning project row: %v", err)
 		}
