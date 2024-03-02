@@ -19,8 +19,8 @@ func (m *MockProjectRepository) CreateProject(ctx context.Context, project *mode
 	return args.Int(0), args.Error(1)
 }
 
-func (m *MockProjectRepository) GetProjectByID(ctx context.Context, projectID int) (*model.Project, error) {
-	args := m.Called(ctx, projectID)
+func (m *MockProjectRepository) GetProjectByID(ctx context.Context, projectID, userID int) (*model.Project, error) {
+	args := m.Called(ctx, projectID, userID)
 	return args.Get(0).(*model.Project), args.Error(1)
 }
 
@@ -68,6 +68,7 @@ func TestProjectService_GetProjectByID(t *testing.T) {
   projectService := NewProjectService(repo)
 
 	projectID := 1
+	userID := 1
 	expectedProject := &model.Project{
 		ID:          projectID,
 		Name:        "Test Project",
@@ -77,9 +78,9 @@ func TestProjectService_GetProjectByID(t *testing.T) {
 		UpdatedAt:   time.Now(),
 	}
 
-	repo.On("GetProjectByID", mock.Anything, projectID).Return(expectedProject, nil)
+	repo.On("GetProjectByID", mock.Anything, projectID, userID).Return(expectedProject, nil)
 
-	resultProject, err := projectService.GetProjectByID(context.Background(), projectID)
+	resultProject, err := projectService.GetProjectByID(context.Background(), projectID, userID)
 
 	assert.NoError(t, err)
 	assert.Equal(t, expectedProject, resultProject)
