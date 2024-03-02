@@ -58,6 +58,37 @@ func GetAllProjectsHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// GetProjectHandler handles the retrieval of a project by ID.
+func GetProjectHandler(w http.ResponseWriter, r *http.Request) {
+	idString := r.PathValue("id")
+
+	// INFO: temporary get user id from header X-User-ID, will be removed later after auth is implemented properly
+	userID, _ := strconv.Atoi(r.Header.Get("X-User-ID"))
+
+	projectId, err := strconv.Atoi(idString)
+	if err != nil {
+		writeJSONResponse(w, http.StatusBadRequest, Response{
+			Error:   err.Error(),
+			Message: "Invalid project ID",
+		})
+		return
+	}
+
+	project, err := pmService.GetProjectByID(r.Context(), projectId, userID)
+	if err != nil {
+		writeJSONResponse(w, http.StatusInternalServerError, Response{
+			Error:   err.Error(),
+			Message: "Failed to retrieve project",
+		})
+		return
+	}
+
+	writeJSONResponse(w, http.StatusOK, Response{
+		Message: "Project retrieved successfully",
+		Project: project,
+	})
+}
+
 // CreateProjectHandler handles the creation of a new project.
 func CreateProjectHandler(w http.ResponseWriter, r *http.Request) {
 	var requestData RequestData

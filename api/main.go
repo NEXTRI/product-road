@@ -67,7 +67,7 @@ func main() {
 	pmModule.InitServices(projectService)
 
 	http.HandleFunc("GET /api/v1/projects", pmModule.GetAllProjectsHandler)
-	// http.HandleFunc("GET /api/v1/projects/{id}", pmModule.GetProjectHandler)
+	http.HandleFunc("GET /api/v1/projects/{id}", pmModule.GetProjectHandler)
 	http.HandleFunc("POST /api/v1/projects", pmModule.CreateProjectHandler)
 	http.HandleFunc("PUT /api/v1/projects/{id}", pmModule.UpdateProjectHandler)
 	http.HandleFunc("DELETE /api/v1/projects/{id}", pmModule.DeleteProjectHandler)

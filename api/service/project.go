@@ -23,8 +23,8 @@ func (s *ProjectService) CreateProject(ctx context.Context, project *model.Proje
 }
 
 // GetProjectByID retrieves a project by its ID.
-func (s *ProjectService) GetProjectByID(ctx context.Context, projectID int) (*model.Project, error) {
-	return s.repo.GetProjectByID(ctx, projectID)
+func (s *ProjectService) GetProjectByID(ctx context.Context, projectID, userID int) (*model.Project, error) {
+	return s.repo.GetProjectByID(ctx, projectID, userID)
 }
 
 // GetAllProjects retrieves all projects for a specific user.
