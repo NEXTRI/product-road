@@ -1,6 +1,6 @@
 module github.com/nextri/product-road
 
-go 1.21.4
+go 1.22.0
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.1
