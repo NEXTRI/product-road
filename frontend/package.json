@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "api": "json-server data/fakeData.json --port 3001"
+    "api": "json-server data/fakeData.json routes.json --port 3001"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

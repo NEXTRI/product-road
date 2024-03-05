@@ -7,4 +7,20 @@ export const navigationMenu = [
   { id: 4, label: "Billing", url: "#", iconName: Wallet },
 ];
 
+export const feedbackCategories = [
+  "Bug",
+  "Question",
+  "Idea",
+  "Enhancement",
+  "Other",
+];
+export const feedbackStatus = [
+  "Open",
+  "Under consideration",
+  "Planned",
+  "In Progress",
+  "Shipped",
+  "Rejected",
+];
+
 // will add project toggle menu & profile menu

@@ -25,7 +25,7 @@ declare global {
   }
 
   interface Feedback {
-    id: number;
+    id: string;
     project_id: number;
     user_id?: number | null;
     external_user_id?: number | null;

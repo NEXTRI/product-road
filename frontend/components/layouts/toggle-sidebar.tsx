@@ -1,22 +1,16 @@
 "use client";
-import { AppProps } from "next/app";
-
-import React from "react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSidebarToggle } from "@/context/SidebarContext";
 
-interface Props {
-  sidebarOpen: boolean;
-  toggleOpen: () => void;
-}
-
-const ToggleSidebar = ({ sidebarOpen, toggleOpen }: Props) => {
+const ToggleSidebar = () => {
+  const { sidebarOpen, toggleSidebar } = useSidebarToggle();
   const handleClick = () => {
-    toggleOpen();
+    toggleSidebar();
   };
   return (
     <TooltipProvider delayDuration={300}>
