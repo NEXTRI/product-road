@@ -20,18 +20,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 import { feedbackCategories, feedbackStatus } from "@/data/constants";
 import { updateFeedback } from "@/actions/actions";
 import { SubmitButton } from "./submit-button";
 
-const UpdateForm = ({ feedbackId }: { feedbackId: string }) => {
+const UpdateForm = ({ data }: { data: Feedback }) => {
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  async function updateForm(formData: FormData) {
+
+  async function updateFeedbackForm(formData: FormData) {
     formRef.current?.reset();
-    const updateFeedbackWithId = updateFeedback.bind(null, feedbackId);
-    await updateFeedbackWithId(formData);
+    const updateFeedbackWithId = updateFeedback.bind(null, data.id);
+    const res = await updateFeedbackWithId(formData);
     setOpen(false);
+    if (res?.error) {
+      toast({
+        title: "Uh! Something went wrong.",
+        description: `${res.error}, Please Try again.`,
+      });
+    } else {
+      toast({
+        description: "Feedback updated successfully",
+      });
+    }
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -41,8 +54,7 @@ const UpdateForm = ({ feedbackId }: { feedbackId: string }) => {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form action={updateForm} ref={formRef}>
-          <input type="hidden" name="feedbackId" value={feedbackId} />
+        <form action={updateFeedbackForm} ref={formRef}>
           <DialogHeader>
             <DialogTitle>Edit Feedback</DialogTitle>
             <DialogDescription>
@@ -51,7 +63,7 @@ const UpdateForm = ({ feedbackId }: { feedbackId: string }) => {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Select name="category">
+              <Select name="category" defaultValue={data.category} required>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a Category" />
                 </SelectTrigger>
@@ -68,7 +80,7 @@ const UpdateForm = ({ feedbackId }: { feedbackId: string }) => {
               </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Select name="status">
+              <Select name="status" defaultValue={data.status} required>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a Status" />
                 </SelectTrigger>

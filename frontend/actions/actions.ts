@@ -1,5 +1,6 @@
 "use server";
 
+import { getErrorMessage } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
 export async function updateFeedback(feedbackId: string, formData: FormData) {
@@ -7,15 +8,18 @@ export async function updateFeedback(feedbackId: string, formData: FormData) {
     category: formData.get("category"),
     status: formData.get("status"),
   };
-  // TODO: add error handling
-
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}feedbacks/${feedbackId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(updatedFields),
-  });
-
-  revalidatePath(`/feedbacks/${feedbackId}`);
+  try {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}feedbacks/${feedbackId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedFields),
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath("/feedback", "layout");
 }

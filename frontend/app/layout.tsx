@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
 import { Sidebar, ToggleSidebar } from "../components/layouts";
 import { SidebarToggleProvider } from "../context/SidebarContext";
 import "./globals.css";
@@ -22,6 +23,7 @@ export default function RootLayout({
             </main>
           </div>
         </SidebarToggleProvider>
+        <Toaster />
       </body>
     </html>
   );

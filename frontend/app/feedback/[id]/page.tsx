@@ -23,7 +23,7 @@ const FeedbackDetail = async ({ params }: { params: { id: string } }) => {
           <BreadcrumbItem href="/feedback">Feedbacks</BreadcrumbItem>
           <BreadcrumbItem active>{data?.title}</BreadcrumbItem>
         </Breadcrumb>
-        <UpdateForm feedbackId={id} />
+        <UpdateForm data={data} />
       </div>
       <div className="p-6 my-4 rounded-lg bg-white shadow-gray relative">
         <div className="flex gap-4 items-center mb-8">
