@@ -10,10 +10,10 @@ import (
 	"github.com/nextri/product-road/model"
 )
 
-// UserRepositoryImp is a PostgreSQL implementation of the UserRepository interface.
+// ProjectRepositoryImp is a PostgreSQL implementation of the ProjectRepository interface.
 type ProjectRepositoryImp struct{}
 
-// NewUserRepository creates a new UserRepository instance.
+// NewProjectRepository creates a new ProjectRepository instance.
 func NewProjectRepository() *ProjectRepositoryImp {
   return &ProjectRepositoryImp{}
 }
