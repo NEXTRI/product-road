@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Check, Pencil, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +26,7 @@ import { updateFeedback } from "@/actions/actions";
 import { SubmitButton } from "./submit-button";
 
 const UpdateForm = ({ data }: { data: Feedback }) => {
+  console.log(data);
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -38,11 +39,20 @@ const UpdateForm = ({ data }: { data: Feedback }) => {
     if (res?.error) {
       toast({
         title: "Uh! Something went wrong.",
-        description: `${res.error}, Please Try again.`,
+        variant: "destructive",
+        description: (
+          <div className="flex justify-center items-center gap-3">
+            <X size={20} /> {res.error} Please Try again.
+          </div>
+        ),
       });
     } else {
       toast({
-        description: "Feedback updated successfully",
+        description: (
+          <div className="flex justify-center items-center gap-3">
+            <Check size={20} color="#3e8f2d" /> Feedback updated successfully
+          </div>
+        ),
       });
     }
   }
@@ -63,7 +73,7 @@ const UpdateForm = ({ data }: { data: Feedback }) => {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Select name="category" defaultValue={data.category} required>
+              <Select name="category" defaultValue={data?.category} required>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a Category" />
                 </SelectTrigger>
@@ -80,7 +90,7 @@ const UpdateForm = ({ data }: { data: Feedback }) => {
               </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Select name="status" defaultValue={data.status} required>
+              <Select name="status" defaultValue={data?.status} required>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a Status" />
                 </SelectTrigger>
