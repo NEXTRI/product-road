@@ -1,13 +1,17 @@
-"use client";
-import React from "react";
 import { columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
-import useFetch from "../../hooks/useFetch";
 import { Breadcrumb, BreadcrumbItem } from "@/components/layouts/breadcrumb";
 
-const Feedback = () => {
-  const { data: feedbacks } = useFetch("feedbacks");
-  const filterOptions = ["category", "status"];
+async function getFeedbacks(): Promise<Feedback[]> {
+  const res = await fetch(`http://localhost:3001/feedbacks`);
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  return res.json();
+}
+
+const Feedback = async () => {
+  const feedbacks = await getFeedbacks();
 
   return (
     <>
@@ -20,7 +24,7 @@ const Feedback = () => {
         <DataTable
           columns={columns}
           data={feedbacks}
-          filterOptions={filterOptions}
+          filterOptions={["category", "status"]}
         />
       </div>
     </>

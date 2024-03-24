@@ -7,11 +7,12 @@
       "external_user_id": "ext_user_001",
       "title": "Feature Request: Dark Mode",
       "description": "It would be great to have a dark mode option for better usability at night.",
-      "category": "Feature Request",
-      "status": "Open",
+      "category": "Enhancement",
+      "status": "Under consideration",
       "votes": 15,
       "created_at": "2024-01-09T12:30:45Z",
-      "updated_at": "2024-01-09T12:30:45Z"
+      "updated_at": "2024-01-09T12:30:45Z",
+      "slug": "feature-request-dark-mode"
     },
     {
       "id": "2",
@@ -24,7 +25,8 @@
       "status": "In Progress",
       "votes": 8,
       "created_at": "2024-01-09T13:45:22Z",
-      "updated_at": "2024-01-09T13:45:22Z"
+      "updated_at": "2024-01-09T13:45:22Z",
+      "slug": "bug-report-login-issue"
     },
     {
       "id": "3",
@@ -34,10 +36,11 @@
       "title": "Enhancement: Improved Search Functionality",
       "description": "Requesting enhancements to the search feature to make it more intuitive and faster.",
       "category": "Enhancement",
-      "status": "Closed",
+      "status": "In Progress",
       "votes": 20,
       "created_at": "2024-01-09T14:20:10Z",
-      "updated_at": "2024-01-09T14:20:10Z"
+      "updated_at": "2024-01-09T14:20:10Z",
+      "slug": "enhancement-improved-search-functionality"
     },
     {
       "id": "4",
@@ -50,7 +53,8 @@
       "status": "Open",
       "votes": 12,
       "created_at": "2024-01-09T15:05:55Z",
-      "updated_at": "2024-01-09T15:05:55Z"
+      "updated_at": "2024-01-09T15:05:55Z",
+      "slug": "feedback-user-interface-suggestions"
     },
     {
       "id": "5",
@@ -63,7 +67,8 @@
       "status": "Open",
       "votes": 10,
       "created_at": "2024-01-09T15:40:30Z",
-      "updated_at": "2024-01-09T15:40:30Z"
+      "updated_at": "2024-01-09T15:40:30Z",
+      "slug": "bug-report-image-upload-error"
     },
     {
       "id": "6",
@@ -76,7 +81,8 @@
       "status": "Open",
       "votes": 18,
       "created_at": "2024-01-09T16:25:15Z",
-      "updated_at": "2024-01-09T16:25:15Z"
+      "updated_at": "2024-01-09T16:25:15Z",
+      "slug": "feature-request-multi-language-support"
     },
     {
       "id": "7",
@@ -89,7 +95,8 @@
       "status": "Resolved",
       "votes": 14,
       "created_at": "2024-01-09T17:10:00Z",
-      "updated_at": "2024-01-09T17:10:00Z"
+      "updated_at": "2024-01-09T17:10:00Z",
+      "slug": "bug-report-mobile-app-crashes"
     },
     {
       "id": "8",
@@ -102,7 +109,8 @@
       "status": "Open",
       "votes": 22,
       "created_at": "2024-01-09T17:45:45Z",
-      "updated_at": "2024-01-09T17:45:45Z"
+      "updated_at": "2024-01-09T17:45:45Z",
+      "slug": "enhancement-real-time-notifications"
     },
     {
       "id": "9",
@@ -115,7 +123,8 @@
       "status": "In Progress",
       "votes": 16,
       "created_at": "2024-01-09T18:30:30Z",
-      "updated_at": "2024-01-09T18:30:30Z"
+      "updated_at": "2024-01-09T18:30:30Z",
+      "slug": "feedback-documentation-improvements"
     },
     {
       "id": "10",
@@ -128,7 +137,8 @@
       "status": "Open",
       "votes": 13,
       "created_at": "2024-01-09T19:15:15Z",
-      "updated_at": "2024-01-09T19:15:15Z"
+      "updated_at": "2024-01-09T19:15:15Z",
+      "slug": "feature-request-export-data"
     },
     {
       "id": "11",
@@ -141,7 +151,8 @@
       "status": "Open",
       "votes": 13,
       "created_at": "2024-01-09T19:15:15Z",
-      "updated_at": "2024-01-09T19:15:15Z"
+      "updated_at": "2024-01-09T19:15:15Z",
+      "slug": "feature-request-export-data"
     },
     {
       "id": "12",
@@ -154,7 +165,8 @@
       "status": "Open",
       "votes": 13,
       "created_at": "2024-01-09T19:15:15Z",
-      "updated_at": "2024-01-09T19:15:15Z"
+      "updated_at": "2024-01-09T19:15:15Z",
+      "slug": "feature-request-export-data"
     },
     {
       "id": "13",
@@ -167,7 +179,8 @@
       "status": "Open",
       "votes": 13,
       "created_at": "2024-01-09T19:15:15Z",
-      "updated_at": "2024-01-09T19:15:15Z"
+      "updated_at": "2024-01-09T19:15:15Z",
+      "slug": "feature-request-export-data"
     }
   ]
 }

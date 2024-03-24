@@ -1,8 +1,11 @@
+"use client";
 import React from "react";
 import { Logo, Navigation, ComboboxDemo } from "./index";
 import { cn } from "@/lib/utils";
+import { useSidebarToggle } from "@/context/SidebarContext";
 
-const Sidebar = ({ sidebarOpen }: { sidebarOpen: boolean }) => {
+const Sidebar = () => {
+  const { sidebarOpen } = useSidebarToggle();
   const toggleStyle = sidebarOpen ? "ml-0" : "-ml-[250px]";
   return (
     <aside

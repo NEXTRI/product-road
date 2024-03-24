@@ -1,14 +1,19 @@
-"use client";
 import React from "react";
-import useFetch from "@/hooks/useFetch";
 import { Breadcrumb, BreadcrumbItem } from "@/components/layouts/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import UpdateForm from "./update-form";
 
-const FeedbackDetail = ({ params }: { params: { id: string } }) => {
+const FeedbackDetail = async ({ params }: { params: { id: string } }) => {
   const id = params.id;
-  const { data } = useFetch<Feedback>(`feedbacks/${id}`);
-
+  async function getFeedbackDetail(): Promise<Feedback> {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}feedbacks/${id}`
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    return res.json();
+  }
+  const data = await getFeedbackDetail();
   return (
     <>
       <h1 className="page-title">Feedback Detail</h1>
@@ -18,9 +23,7 @@ const FeedbackDetail = ({ params }: { params: { id: string } }) => {
           <BreadcrumbItem href="/feedback">Feedbacks</BreadcrumbItem>
           <BreadcrumbItem active>{data?.title}</BreadcrumbItem>
         </Breadcrumb>
-        <Button variant="theme" className="flex items-center gap-2">
-          <Pencil size={18} color="#6e6e6e" /> Edit Feedback
-        </Button>
+        <UpdateForm data={data} />
       </div>
       <div className="p-6 my-4 rounded-lg bg-white shadow-gray relative">
         <div className="flex gap-4 items-center mb-8">

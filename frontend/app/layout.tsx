@@ -1,7 +1,7 @@
-"use client";
-import { useState } from "react";
 import { Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
 import { Sidebar, ToggleSidebar } from "../components/layouts";
+import { SidebarToggleProvider } from "../context/SidebarContext";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -11,24 +11,19 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="h-full flex">
-          <Sidebar sidebarOpen={sidebarOpen} />
-          <main className="relative bg-gray-100 px-8 py-10 flex-1">
-            <ToggleSidebar
-              sidebarOpen={sidebarOpen}
-              toggleOpen={toggleSidebar}
-            />
-            {children}
-          </main>
-        </div>
+        <SidebarToggleProvider>
+          <div className="h-full flex">
+            <Sidebar />
+            <main className="relative bg-gray-100 px-8 py-10 flex-1">
+              <ToggleSidebar />
+              {children}
+            </main>
+          </div>
+        </SidebarToggleProvider>
+        <Toaster />
       </body>
     </html>
   );

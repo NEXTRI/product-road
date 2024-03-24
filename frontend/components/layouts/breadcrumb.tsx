@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { ChevronRight } from "lucide-react";
 
 interface BreadcrumbItemProps {
@@ -7,7 +6,7 @@ interface BreadcrumbItemProps {
   active?: boolean;
   children: React.ReactNode;
 }
-
+// TODO: turn breadcrumbs items dynamic, after setting slug as endpoint instead of id
 export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({
   href,
   active,

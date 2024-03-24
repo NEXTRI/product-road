@@ -1,7 +1,7 @@
-import Logo from "./Logo";
-import Navigation from "./Navigation";
-import Sidebar from "./Sidebar";
-import ToggleSidebar from "./ToggleSidebar";
-import { ComboboxDemo } from "./ComboboxDemo";
+import Logo from "./logo";
+import Navigation from "./navigation";
+import Sidebar from "./sidebar";
+import ToggleSidebar from "./toggle-sidebar";
+import { ComboboxDemo } from "./combobox-demo";
 
 export { Logo, Navigation, Sidebar, ComboboxDemo, ToggleSidebar };
