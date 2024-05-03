@@ -22,3 +22,12 @@ type ProjectRepository interface {
 	UpdateProject(ctx context.Context, project *model.Project) error
 	DeleteProject(ctx context.Context, projectID int) error
 }
+
+// FeedbackRepository defines the interface for feedback-related data access operations.
+type FeedbackRepository interface {
+	CreateFeedback(ctx context.Context, feedback *model.Feedback) (int, error)
+	GetFeedbackByID(ctx context.Context, feedbackID, userID int) (*model.Feedback, error)
+	GetAllFeedbacks(ctx context.Context, projectID int) ([]*model.Feedback, error)
+	UpdateFeedback(ctx context.Context, feedback *model.Feedback) error
+	DeleteFeedback(ctx context.Context, feedbackID int) error
+}

@@ -13,6 +13,7 @@ import (
 	"github.com/joho/godotenv"
 	authModule "github.com/nextri/product-road/auth"
 	"github.com/nextri/product-road/db/postgres"
+	fmModule "github.com/nextri/product-road/feedback-management"
 	"github.com/nextri/product-road/passwordless"
 	pmModule "github.com/nextri/product-road/project-management"
 	"github.com/nextri/product-road/service"
@@ -54,32 +55,41 @@ func main() {
 		DB: 1,
 	})
 
-  userService := service.NewUserService(postgres.NewUserRepository())
 	emailTokenService := authModule.NewEmailTokenService(passwordless.NewRedisStore(redisClient), passwordless.NewSMTPTransport(config), passwordless.NewToken(tokenConfig), tokenConfig)
+  userService := service.NewUserService(postgres.NewUserRepository())
   tokenAuthService := authModule.NewTokenAuthService()
+	projectService := service.NewProjectService(postgres.NewProjectRepository())
+	feedbackService := service.NewFeedbackService(postgres.NewFeedbackRepository())
 
   authModule.InitServices(userService, emailTokenService, tokenAuthService)
-
-  http.HandleFunc("POST /api/v1/auth/login", authModule.LoginHandler)
-  http.HandleFunc("POST /api/v1/auth/verify", authModule.MagicLinkVerificationHandler)
-
-	projectService := service.NewProjectService(postgres.NewProjectRepository())
 	pmModule.InitServices(projectService)
+	fmModule.InitServices(feedbackService)
 
-	http.HandleFunc("GET /api/v1/projects", pmModule.GetAllProjectsHandler)
-	http.HandleFunc("GET /api/v1/projects/{id}", pmModule.GetProjectHandler)
-	http.HandleFunc("POST /api/v1/projects", pmModule.CreateProjectHandler)
-	http.HandleFunc("PUT /api/v1/projects/{id}", pmModule.UpdateProjectHandler)
-	http.HandleFunc("DELETE /api/v1/projects/{id}", pmModule.DeleteProjectHandler)
+	router := http.NewServeMux()
 
-  // Health check endpoint
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	// Health check endpoint
+	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 	})
 
+  router.HandleFunc("POST /auth/login", authModule.LoginHandler)
+  router.HandleFunc("POST /auth/verify", authModule.MagicLinkVerificationHandler)
+
+	router.HandleFunc("GET /projects", pmModule.GetAllProjectsHandler)
+	router.HandleFunc("GET /projects/{id}", pmModule.GetProjectHandler)
+	router.HandleFunc("POST /projects", pmModule.CreateProjectHandler)
+	router.HandleFunc("PUT /projects/{id}", pmModule.UpdateProjectHandler)
+	router.HandleFunc("DELETE /projects/{id}", pmModule.DeleteProjectHandler)
+
+	router.HandleFunc("GET /feedbacks/{project_id}", fmModule.GetAllFeedbacksHandler)
+
+	v1 := http.NewServeMux()
+	v1.Handle("/api/v1/", http.StripPrefix("/api/v1/", router))
+
   srv := &http.Server{
 		Addr: ":8080",
+		Handler: router,
 	}
 
   go func() {
