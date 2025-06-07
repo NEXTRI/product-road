@@ -14,7 +14,7 @@ services:
       - db
   db:
     container_name: nextly-db
-    image: postgres:15.2-alpine
+    image: postgres:17-alpine
     command: postgres -c 'max_connections=1000'
     env_file:
       - .env
